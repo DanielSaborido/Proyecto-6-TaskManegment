@@ -30,11 +30,19 @@
         </div>
         <div>
           <label htmlFor="status">Status Task:</label>
-          <select>
+          <select v-model=status>
             <option value="complete">Complete</option>
             <option value="processing">Processing</option>
             <option value="pending">Pending</option>
           </select>
+        </div>
+        <div>
+          <input type="checkbox" 
+            id = "priority"
+            name = "priority"
+            v-model=priority
+          />
+          <label htmlFor="priority">Task priority</label>
         </div>
         <button type="submit">Create Task</button>
       </form>
@@ -51,6 +59,8 @@
             title: "",
             description: "",
             category: "",
+            status: "",
+            priority: false,
           }
       },
   

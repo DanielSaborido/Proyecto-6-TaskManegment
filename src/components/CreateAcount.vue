@@ -19,7 +19,15 @@
             v-model=password
           />
         </div>
-        <a href="">Forget password?</a>
+        <div>
+          <label htmlFor="Rpassword">Repeat password:</label>
+          <input
+            type="Rpassword"
+            id="Rpassword"
+            name="Rpassword"
+            v-model=Rpassword
+          />
+        </div>
         <button type="submit">Log in</button>
       </form>
       <button >Create Account</button>
@@ -35,6 +43,7 @@
           return{
             email: "",
             password: "",
+            Rpassword: "",
           }
       },
   
@@ -42,6 +51,9 @@
         validateEmail() {
             const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
             return re.test(this.email)
+        },
+        validatePassword() {
+            return this.password === this.Rpassword
         }
       },
   
