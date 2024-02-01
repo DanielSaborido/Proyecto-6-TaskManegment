@@ -1,5 +1,10 @@
 <template>
-  <h1>{{title}}</h1>
+  <header>
+    <nav>
+      <h1>{{title}}</h1>
+      <img src="../assets/sol-y-luna.png" alt="light/dark">
+    </nav>
+  </header>
   <div>
     <button v-on:click="">New Task</button>
     <select>
