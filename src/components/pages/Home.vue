@@ -1,12 +1,6 @@
 <template>
-  <header>
-    <nav>
-      <h1>{{title}}</h1>
-      <img src="../assets/sol-y-luna.png" alt="light/dark">
-    </nav>
-  </header>
   <div>
-    <button v-on:click="">New Task</button>
+    <router-link to="/taskf">Create Task</router-link>
     <select>
       <option value="default" selected>All Tasks</option>
       <option value="complete">Complete</option>

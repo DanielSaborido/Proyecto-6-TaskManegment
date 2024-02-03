@@ -28,7 +28,8 @@ La propuesta se centra en el desarrollo de funciones personalizadas para interac
 
 ## Base realizada en Figma:
 
-![Inicio de figma](image-1.png)
+![Inicio de figma](image.png)
+[Enlace Figma](https://www.figma.com/file/BGaKQrkexlQIjpmLp58o66/Task-Manager?type=design&node-id=1%3A2&mode=design&t=ug5M0ZaEtpbGrVLc-1)
 
 ### Estructura de Objetos
 La estructura de objetos se adapta a la arquitectura de Vue.js, incorporando componentes que representen tareas, proyectos y listas de tareas. Estos objetos se integrarán en la lógica del proyecto, permitiendo una gestión eficiente de la información.

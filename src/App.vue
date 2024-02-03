@@ -1,12 +1,12 @@
 <template>
-  <Counter title="Task Manegment" />
+  <Navbar />
+  <router-view />
 </template>
 
 <script>
-  import Counter from "./components/Counter.vue"
-
+  import Navbar from "./components/shared/Navbar.vue"
   export default {
-    components: {Counter}
+    components: {Navbar},
   }
 </script>
 
