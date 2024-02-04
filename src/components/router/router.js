@@ -2,18 +2,31 @@ import {createRouter, createWebHashHistory} from "vue-router"
 import Home from '../pages/Home.vue'
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Home, meta: { title: 'Home' } },
   { 
     path: '/taskf',
-    component: () => import('../pages/TasksForm.vue') 
+    component: () => import('../pages/TasksForm.vue'),
+    meta: { title: 'Create Task' }
+  },
+  { 
+    path: '/taskf/:id',
+    component: () => import('../pages/TasksForm.vue'),
+    meta: { title: 'Edit Task' }
   },
   { 
     path: '/login',
-    component: () => import('../pages/Login.vue') 
+    component: () => import('../pages/Login.vue'),
+    meta: { title: 'Login' }
+  },
+  { 
+    path: '/contact',
+    component: () => import('../pages/Contact.vue'),
+    meta: { title: 'Contact' }
   },
   { 
     path: '/:pathMach(.*)*',
-    component: () => import('../pages/Error.vue') 
+    component: () => import('../pages/Error.vue'),
+    meta: { title: 'Error Page' }
   },
 ]
 

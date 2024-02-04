@@ -1,21 +1,21 @@
 <template>
   <div>
     <router-link to="/taskf">Create Task</router-link>
-    <select>
+    <select v-model=status>
       <option value="default" selected>All Tasks</option>
       <option value="complete">Complete</option>
       <option value="processing">Processing</option>
       <option value="pending">Pending</option>
     </select>
-    <select>
+    <select v-model=order>
       <option value="default" selected>Order by</option>
       <option value="priority">Priority</option>
       <option value="status">Status</option>
       <option value="date">Date</option>
     </select>
-    <select v-show=(categories)>
+    <select v-model=category v-show=(categories)>
       <option value="default" selected>All categories</option>
-      <option v-for="{categorie} in categories" value="categorie">{{categorie}}</option>
+      <option v-for="{category} in categories" value="category">{{category}}</option>
     </select>
   </div>
   <footer>
@@ -26,14 +26,12 @@
 
 <script>
   export default {
-    props:{
-        title: String,
-    },
-
     data() {
         return{
+          status: "",
+          order: "",
           categories: [],
-          
+          category: "",
         }
     },
 
@@ -44,7 +42,3 @@
     }
   } 
 </script>
-
-<style>
-
-</style>
