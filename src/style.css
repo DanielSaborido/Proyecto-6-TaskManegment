@@ -29,12 +29,17 @@ body {
   min-height: 100vh;
 }
 
+nav {
+  display: flex;
+  justify-content: space-between;
+}
+
 .icon {
   width: 10%;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 5fr;
   line-height: 1.1;
 }
 
