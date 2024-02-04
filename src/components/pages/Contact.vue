@@ -1,5 +1,5 @@
 <template>
-  <form v-show=login>
+  <form>
     <div>
       <label htmlFor="email">Email:</label>
       <input
