@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,6 +11,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+} */
+
+[data-theme="light"] {
+  --background-color: #f3f3f3;
+  --text-color: #242424;
+}
+
+[data-theme="dark"] {
+  --background-color: #010320;
+  --text-color: #dddddd;
 }
 
 a {
@@ -22,6 +32,8 @@ a:hover {
 }
 
 body {
+  background: var(--background-color);
+  color: var(--text-color);
   margin: 30px;
   display: flex;
   min-width: 320px;
@@ -40,7 +52,7 @@ h1 {
   font-size: 250%;
 }
 
-user {
+nav > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +92,7 @@ button:focus-visible {
   text-align: center;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #242424;
     background-color: #EFF1F3;
@@ -91,4 +103,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
