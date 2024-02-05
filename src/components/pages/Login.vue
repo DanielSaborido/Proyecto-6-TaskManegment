@@ -4,7 +4,6 @@
       <label htmlFor="email">Email:</label>
       <input
         type="email"
-        id="email"
         name="email"
         v-model=email
       />
@@ -13,7 +12,6 @@
       <label htmlFor="password">Password:</label>
       <input
         type="password"
-        id="password"
         name="password"
         v-model=password
       />
@@ -27,7 +25,6 @@
       <label htmlFor="email">Email:</label>
       <input
         type="email"
-        id="email"
         name="email"
         v-model=email
       />
@@ -36,7 +33,6 @@
       <label htmlFor="password">Password:</label>
       <input
         type="password"
-        id="password"
         name="password"
         v-model=password
       />
@@ -44,8 +40,7 @@
     <div>
       <label htmlFor="Rpassword">Repeat password:</label>
       <input
-        type="Rpassword"
-        id="Rpassword"
+        type="password"
         name="Rpassword"
         v-model=Rpassword
       />
@@ -57,7 +52,6 @@
       <label htmlFor="email">Email:</label>
       <input
         type="email"
-        id="email"
         name="email"
         v-model=email
       />

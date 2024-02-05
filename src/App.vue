@@ -9,7 +9,3 @@
     components: {Navbar},
   }
 </script>
-
-<style>
-
-</style>

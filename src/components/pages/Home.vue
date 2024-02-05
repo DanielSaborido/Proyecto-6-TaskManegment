@@ -33,12 +33,6 @@
           categories: [],
           category: "default",
         }
-    },
-
-    methods:{
-    },
-
-    computed: {
     }
   } 
 </script>
