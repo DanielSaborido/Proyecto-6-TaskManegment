@@ -15,20 +15,26 @@
 
 [data-theme="light"] {
   --background-color: #e2f1fa;
-  --text-color: #242424;
+  --text-color: #2c2d30;
+  --text-color-hover: #081b3d;
+  --bt-background-color: #63b6e6;
+  --bt-background-color-hover: #2890bd;
 }
 
 [data-theme="dark"] {
   --background-color: #252441;
-  --text-color: #dddddd;
+  --text-color: #e2e2e2;
+  --text-color-hover: #c3fbff;
+  --bt-background-color: #0c3b50;
+  --bt-background-color-hover: #081b23;
 }
 
 a {
-  color: #64c6ff;
+  color: var(--text-color);
   text-decoration: inherit;
 }
 a:hover {
-  color: #5378f2;
+  color: var(--text-color-hover);
 }
 
 body {
@@ -46,22 +52,27 @@ nav {
   align-items: center;
   height: 5%;
   width: 100%;
+  margin-bottom: 5%;
+}
+
+.icon {
+  height: 100%;
 }
 
 h1 {
   font-size: 250%;
 }
 
-nav > div {
+user {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  width: 20%;
+  width: 10%;
 }
 
-.icon {
-  height: 100%;
+user > .icon {
+  height: 50%;
 }
 
 button {
@@ -69,14 +80,16 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
+  color: var(--text-color);
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--bt-background-color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
   border-color: #646cff;
+  background-color: var(--bt-background-color-hover);
 }
 button:focus,
 button:focus-visible {
