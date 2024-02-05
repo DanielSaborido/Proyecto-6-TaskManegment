@@ -1,8 +1,9 @@
 <template>
   <nav>
     <router-link to="/" class="icon">
-      <img v-if="theme === 'light'" src="../../assets/light/home.png" alt="Home" class="icon">
-      <img v-else src="../../assets/dark/home.png" alt="Home" class="icon">
+      <img v-if="route === '/'" src="../../assets/imagotipo-fast-task.svg" alt="Home" class="icon">
+      <img v-else-if="theme === 'light' && route !== '/'" src="../../assets/light/logo-horizontal-fast-task.svg" alt="Home" class="icon">
+      <img v-else src="../../assets/dark/logo-fast-task-version-blanca.svg" alt="Home" class="icon">
     </router-link>
     <h1>{{ title }}</h1>
     <div>
@@ -26,6 +27,9 @@
       title() {
         return this.$route.meta.title || 'Default Title'
       },
+      route() {
+        return this.$route.path
+      },
     },
     data() {
       return {
@@ -37,9 +41,7 @@
         this.theme = localStorage.getItem('theme')
       },
       changeTheme(){
-        console.log(this.theme)
         this.theme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'
-        console.log(this.theme)
         localStorage.setItem('theme', this.theme)
         document.documentElement.setAttribute('data-theme', this.theme)
       },

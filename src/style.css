@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: #EFF1F3;
-  background-color: #010320;
+  background-color: #252441;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,12 +14,12 @@
 } */
 
 [data-theme="light"] {
-  --background-color: #f3f3f3;
+  --background-color: #e2f1fa;
   --text-color: #242424;
 }
 
 [data-theme="dark"] {
-  --background-color: #010320;
+  --background-color: #252441;
   --text-color: #dddddd;
 }
 
