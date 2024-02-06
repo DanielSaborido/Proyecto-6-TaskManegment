@@ -17,11 +17,11 @@
     <label htmlFor="category">Category Task:</label>
     <div>
       <input type="checkbox" 
-        id = "priority"
-        name = "priority"
-        v-model=priority
+        id = "category"
+        name = "category"
+        v-model=categories.useCategory
       />
-      <input type="text" class="category" />
+      <input type="text" class="category" v-model=categories.category />
     </div>
     <label htmlFor="status">Status Task:</label>
     <select v-model=status>
@@ -50,7 +50,9 @@
         return{
           title: "",
           description: "",
-          category: "",
+          categories: [
+            {useCategory:false, category:""}
+          ],
           status: "pending",
           limitDate: "",
           priority: false,
