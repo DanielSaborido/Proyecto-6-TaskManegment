@@ -3,7 +3,9 @@ import router from "./components/router/router.js"
 import './style.css'
 import App from './App.vue'
 
-const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const localTheme = localStorage.getItem('theme')
+
+const theme = localTheme !== null ? localTheme : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
 localStorage.setItem('theme', theme)
 document.documentElement.setAttribute('data-theme', theme)
 

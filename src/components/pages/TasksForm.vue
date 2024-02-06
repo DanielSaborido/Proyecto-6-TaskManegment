@@ -23,12 +23,15 @@
     </select>
     <label for="limitDate">Fecha límite:</label>
     <input type="date" id="limitDate" name="limitDate" required>
-    <input type="checkbox" 
-      id = "priority"
-      name = "priority"
-      v-model=priority
-    />
-    <label htmlFor="priority">Task priority</label>
+    <div>
+      <input type="checkbox" 
+        id = "priority"
+        name = "priority"
+        v-model=priority
+      />
+      <label htmlFor="priority">Task priority</label>
+    </div>
+    
     <button type="submit">Create Task</button>
   </form>
 </template>

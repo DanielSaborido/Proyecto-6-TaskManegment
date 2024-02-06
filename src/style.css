@@ -96,8 +96,32 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.card {
-  padding: 2em;
+form {
+  display: flex;
+  padding-left: 37.5%;
+  padding-bottom: 8px;
+  flex-direction: column;
+  width: 25%;
+}
+
+label {
+  margin-bottom: 8px;
+  align-self: flex-start;
+}
+
+input {
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+select {
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+form > a {
+  margin-bottom: 12px;
+  align-self: flex-start;
 }
 
 #app {

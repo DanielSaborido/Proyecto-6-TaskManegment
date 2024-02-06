@@ -1,23 +1,19 @@
 <template>
   <form>
-    <div>
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        v-model=email
-      />
-    </div>
-    <div>
-      <label htmlFor="comment">Comment:</label>
-      <input
-        type="comment"
-        id="comment"
-        name="comment"
-        v-model=comment
-      />
-    </div>
+    <label htmlFor="email">Email:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      v-model=email
+    />
+    <label htmlFor="comment">Comment:</label>
+    <input
+      type="comment"
+      id="comment"
+      name="comment"
+      v-model=comment
+    />
     <button type="submit">Send comment</button>
   </form>
 </template>
