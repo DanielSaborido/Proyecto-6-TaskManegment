@@ -142,6 +142,12 @@ form > a {
   align-self: flex-start;
 }
 
+.category {
+  background-color: transparent;
+  color: var(--text-color);
+  width: 20%;
+}
+
 form > select {
   width: 100%;
 }

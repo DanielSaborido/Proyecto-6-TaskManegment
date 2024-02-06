@@ -15,6 +15,14 @@
       v-model=description
     />
     <label htmlFor="category">Category Task:</label>
+    <div>
+      <input type="checkbox" 
+        id = "priority"
+        name = "priority"
+        v-model=priority
+      />
+      <input type="text" class="category" />
+    </div>
     <label htmlFor="status">Status Task:</label>
     <select v-model=status>
       <option value="complete">Complete</option>
