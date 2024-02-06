@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form @submit.prevent="sentComments">
     <label htmlFor="email">Email:</label>
     <input
       type="email"
@@ -14,6 +14,9 @@
       name="comment"
       v-model=comment
     />
+    <p v-if="email && !validateEmail">
+      Error. The email is not valid.
+    </p>
     <button type="submit">Send comment</button>
   </form>
 </template>
@@ -27,7 +30,17 @@
         }
     },
 
-    methods:{
+    methods: {
+      sentComments() {
+        if (this.validateEmail) {
+          console.log("Comments sent")
+        } else {
+          console.log("Please check the email is invalid.")
+        }
+      },
+    },
+
+    computed: {
       validateEmail() {
           const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
           return re.test(this.email)
