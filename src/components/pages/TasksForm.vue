@@ -22,7 +22,7 @@
       <option value="pending">Pending</option>
     </select>
     <label for="limitDate">Fecha límite:</label>
-    <input type="date" id="limitDate" name="limitDate" required>
+    <input type="date" id="limitDate" name="limitDate">
     <div>
       <input type="checkbox" 
         id = "priority"
@@ -31,7 +31,6 @@
       />
       <label htmlFor="priority">Task priority</label>
     </div>
-    
     <button type="submit">Create Task</button>
   </form>
 </template>
@@ -44,7 +43,8 @@
           title: "",
           description: "",
           category: "",
-          status: "",
+          status: "pending",
+          limitDate: "",
           priority: false,
         }
     },

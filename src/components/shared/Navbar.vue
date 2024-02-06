@@ -5,7 +5,7 @@
       <img v-else-if="theme === 'light' && route !== '/'" src="../../assets/light/logo-horizontal-fast-task.svg" alt="Home" class="icon">
       <img v-else src="../../assets/dark/logo-fast-task-version-blanca.svg" alt="Home" class="icon">
     </router-link>
-    <h1>{{ title }}</h1>
+    <h1 class="title">{{ title }}</h1>
     <user>
       <img v-if="theme === 'light'" src="../../assets/light/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
       <img v-else src="../../assets/dark/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
