@@ -41,6 +41,14 @@
     </div>
     <button type="submit">Create Task</button>
   </form>
+  <div v-if="showErrorMessage" class="error-message">
+    <p>Error: Please check your input.</p>
+    <ul>
+      <li v-if="title">No title of task.</li>
+      <li v-if="description">The task has not description.</li>
+    </ul>
+    <button @click="hideErrorMessage">Close</button>
+  </div>
 </template>
 
 <script>
@@ -56,6 +64,7 @@
           status: "pending",
           limitDate: null,
           priority: false,
+          showErrorMessage: false,
         }
     },
 
@@ -66,9 +75,12 @@
           const creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
           console.log("Task data: \n"+this.title+"\n"+this.description+"\n"+this.categories+"\n"+this.status+"\n"+creationDate+"\n"+(this.limitDate == null? "Unlimited":limitDate)+"\n"+this.priority)
         } else {
-          console.log("The creation of task failed.")
+          this.showErrorMessage = true
         }
-      }
+      },
+      hideErrorMessage() {
+        this.showErrorMessage = false
+      },
     },
   } 
 </script>

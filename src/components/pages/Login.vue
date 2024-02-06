@@ -26,8 +26,8 @@
       name="name"
       v-model=name
     />
-    <p v-if="email && !validateEmail">
-      Error. The email is not valid.
+    <p v-if="name && !validateName">
+      Error. The name is not valid.
     </p>
     <label>Email:</label>
     <input
@@ -73,6 +73,15 @@
     </p>
     <button type="submit">Sent recover</button>
   </form>
+  <div v-if="showErrorMessage" class="error-message">
+    <p>Error: Please check your input.</p>
+    <ul>
+      <li v-if="create && !validateName">Name is not valid.</li>
+      <li v-if="!validateEmail">Email is not valid.</li>
+      <li v-if="create && !validatePassword">Passwords do not match.</li>
+    </ul>
+    <button @click="hideErrorMessage">Close</button>
+  </div>
 </template>
 
 <script>
@@ -87,6 +96,7 @@
           login: true,
           create: false,
           forget: false,
+          showErrorMessage: false,
         }
     },
 
@@ -96,27 +106,29 @@
           console.log("Login successful!")
         } else {
           console.log("Login failed. Please check your email and password.")
+          this.showErrorMessage = true
         }
       },
-
       createAcount() {
         if (this.validateName && this.validateEmail && this.validatePassword) {
           console.log("Account created successfully!")
           this.create=false
           this.login=true
         } else {
-          console.log("Account creation failed. Please check your input.")
+          this.showErrorMessage = true
         }
       },
-
       rememberPassword() {
         if (this.validateEmail) {
           console.log("Password recovery email sent successfully!")
           this.forget=false
           this.login=true
         } else {
-          console.log("Password recovery failed. Please check your email.")
+          this.showErrorMessage = true
         }
+      },
+      hideErrorMessage() {
+        this.showErrorMessage = false
       },
     },
 

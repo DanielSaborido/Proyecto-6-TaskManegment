@@ -170,6 +170,23 @@ select {
   text-align: center;
 }
 
+.error-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  color: var(--text-color);
+  background-color: #f8abab;
+  padding: 10px;
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+  max-width: 300px;
+  max-height: 300px;
+  text-align: center;
+}
+
 /* @media (prefers-color-scheme: light) {
   :root {
     color: #242424;
