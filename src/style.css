@@ -144,13 +144,18 @@ form > a {
 
 .categories {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 
-.category {
+.category{
+  width: 25%;
+}
+
+.categoryInfo {
   background-color: transparent;
   color: var(--text-color);
-  width: 20%;
+  width: 50%;
   border: 0;
 }
 

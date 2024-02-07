@@ -16,7 +16,7 @@
     />
     <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
-      <div v-for="category in categories">
+      <div v-for="category in categories" class="category">
         <input type="checkbox" 
           v-bind:id = category
           name = "category"
@@ -26,7 +26,12 @@
         <label v-bind:htmlFor=category>{{category}}</label>
       </div>
     </section>
-    
+    <section class="categories" v-if="logued">
+      <div v-for="(opcion, index) in categoriesCreated" :key="index" class="category">
+        <input type="checkbox" v-bind:value="categoriesCreated[index].category" v-model="categoriesSelected">
+        <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
+      </div>
+    </section>
     <label htmlFor="status">Status Task:</label>
     <select v-model=status>
       <option value="complete">Complete</option>
@@ -79,6 +84,7 @@
           title: null,
           description: null,
           categories: ["Escuela","Casa","Trabajo","Ocio"],
+          categoriesCreated: [{ category: '' }],
           categoriesSelected: [],
           status: "pending",
           creationDate: null,
@@ -91,6 +97,16 @@
     },
 
     methods:{
+      createCategory(index) {
+        if (index === this.categoriesCreated.length - 1) {
+          const currentCategory = this.categoriesCreated[index].category.trim();
+          if (currentCategory !== '') {
+            this.categoriesCreated.push({ category: '' });
+          } else {
+            this.categoriesCreated.splice(index, 1);
+          }
+        }
+      },
       createTask(){
         if (this.title && this.description) {
           var f = new Date();
