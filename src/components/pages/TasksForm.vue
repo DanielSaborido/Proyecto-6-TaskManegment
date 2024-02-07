@@ -14,7 +14,7 @@
       name="description"
       v-model=description
     />
-    <label htmlFor="category">Category Task:</label>
+    <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
       <div v-for="category in categories">
         <input type="checkbox" 
@@ -25,8 +25,8 @@
         />
         <label v-bind:htmlFor=category>{{category}}</label>
       </div>
-      
     </section>
+    
     <label htmlFor="status">Status Task:</label>
     <select v-model=status>
       <option value="complete">Complete</option>
@@ -70,12 +70,15 @@
 
 <script>
   export default {
+    // props:{
+    //   logued: Boolean,
+    // },
 
     data() {
         return{
           title: null,
           description: null,
-          categories: ["hola","casa","trabajo","ocio"],
+          categories: ["Escuela","Casa","Trabajo","Ocio"],
           categoriesSelected: [],
           status: "pending",
           creationDate: null,
@@ -83,6 +86,7 @@
           priority: false,
           showErrorMessage: false,
           showSucceedMessage: false,
+          logued: false,
         }
     },
 
