@@ -16,12 +16,16 @@
     />
     <label htmlFor="category">Category Task:</label>
     <section class="categories">
-      <input type="checkbox" 
-        id = "category"
-        name = "category"
-        v-model=categories.useCategory
-      />
-      <input type="text" class="category" v-model=categories.category />
+      <div v-for="category in categories">
+        <input type="checkbox" 
+          v-bind:id = category
+          name = "category"
+          v-bind:value="category"
+          v-model="categoriesSelected"
+        />
+        <label v-bind:htmlFor=category>{{category}}</label>
+      </div>
+      
     </section>
     <label htmlFor="status">Status Task:</label>
     <select v-model=status>
@@ -30,7 +34,7 @@
       <option value="pending">Pending</option>
     </select>
     <label for="limitDate">Limit Date:</label>
-    <input type="date" id="limitDate" name="limitDate">
+    <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
     <div>
       <input type="checkbox" 
         id = "priority"
@@ -44,10 +48,23 @@
   <div v-if="showErrorMessage" class="error-message">
     <p>Error: Please check your input.</p>
     <ul>
-      <li v-if="title">No title of task.</li>
-      <li v-if="description">The task has not description.</li>
+      <li v-if="{title}">No title of task.</li>
+      <li v-if="{description}">The task has not description.</li>
     </ul>
-    <button @click="hideErrorMessage">Close</button>
+    <button @click="hideMessage">Close</button>
+  </div>
+  <div v-if="showSucceedMessage" class="succeed-message">
+    <p>Task data: </p>
+    <ul>
+      <li>Title: {{ title }}</li>
+      <li>Description: {{ description }}</li>
+      <li v-if=(categoriesSelected.length)>Categories: {{ categoriesSelected }}</li>
+      <li>Creation Date: {{ creationDate }}</li>
+      <li v-if="{limitDate}">limitDate: {{ limitDate }}</li>
+      <li v-else>limitDate: Unlimited</li>
+      <li>priority: {{ priority }}</li>
+    </ul>
+    <button @click="hideMessage">Close</button>
   </div>
 </template>
 
@@ -58,13 +75,14 @@
         return{
           title: null,
           description: null,
-          categories: [
-            {useCategory:false, category:null}
-          ],
+          categories: ["hola","casa","trabajo","ocio"],
+          categoriesSelected: [],
           status: "pending",
+          creationDate: null,
           limitDate: null,
           priority: false,
           showErrorMessage: false,
+          showSucceedMessage: false,
         }
     },
 
@@ -72,14 +90,16 @@
       createTask(){
         if (this.title && this.description) {
           var f = new Date();
-          const creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-          console.log("Task data: \n"+this.title+"\n"+this.description+"\n"+this.categories+"\n"+this.status+"\n"+creationDate+"\n"+(this.limitDate == null? "Unlimited":limitDate)+"\n"+this.priority)
+          this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+          this.showSucceedMessage = true
+          console.log(this.title+"\n"+this.description+"\n"+this.categoriesSelected+"\n"+this.status+"\n"+this.creationDate+"\n"+(this.limitDate == null? "Unlimited":limitDate)+"\n"+this.priority)
         } else {
           this.showErrorMessage = true
         }
       },
-      hideErrorMessage() {
+      hideMessage() {
         this.showErrorMessage = false
+        this.showSucceedMessage = false
       },
     },
   } 

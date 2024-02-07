@@ -15,7 +15,7 @@
     </select>
     <select v-model=category v-if=(categories.length)>
       <option value="default">All categories</option>
-      <option v-for="category in categories" value="category">{{category}}</option>
+      <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>
   </header>
   <main>

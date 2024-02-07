@@ -23,7 +23,7 @@
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="!validateEmail">Email is not valid.</li>
-      <li v-if="comment">There is nots comment.</li>
+      <li v-if="{comment}">There is not comment.</li>
     </ul>
     <button @click="hideErrorMessage">Close</button>
   </div>

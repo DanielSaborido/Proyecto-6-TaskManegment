@@ -130,7 +130,7 @@ input {
 }
 
 input[type="checkbox"]{
-  width: 5%;
+  width: 20%;
 }
 
 div {
@@ -142,10 +142,16 @@ form > a {
   align-self: flex-start;
 }
 
+.categories {
+  display: flex;
+  width: 100%;
+}
+
 .category {
   background-color: transparent;
   color: var(--text-color);
   width: 20%;
+  border: 0;
 }
 
 form > select {
@@ -181,6 +187,23 @@ select {
   background-color: #f8abab;
   padding: 10px;
   border: 1px solid #ff0000;
+  border-radius: 5px;
+  max-width: 300px;
+  max-height: 300px;
+  text-align: center;
+}
+
+.succeed-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  color: #000000;
+  background-color: #b0f192;
+  padding: 10px;
+  border: 1px solid #48ff00;
   border-radius: 5px;
   max-width: 300px;
   max-height: 300px;

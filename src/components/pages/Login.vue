@@ -78,6 +78,7 @@
     <ul>
       <li v-if="create && !validateName">Name is not valid.</li>
       <li v-if="!validateEmail">Email is not valid.</li>
+      <li v-if="{password}">Password is not valid.</li>
       <li v-if="create && !validatePassword">Passwords do not match.</li>
     </ul>
     <button @click="hideErrorMessage">Close</button>
