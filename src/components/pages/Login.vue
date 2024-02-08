@@ -15,7 +15,7 @@
       name="password"
       v-model=password
     />
-    <a @click="forget=true; login=false">Forget password?</a>
+    <a class="router" @click="forget=true; login=false">Forget password?</a>
     <button type="submit">Log in</button>
   </form>
   <button v-show=login @click="create=true; login=false">Create Account</button>

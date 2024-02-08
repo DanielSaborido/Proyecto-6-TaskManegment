@@ -41,7 +41,7 @@
     <label for="limitDate">Limit Date:</label>
     <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
     <section class="container">
-      <input type="checkbox" class="checkbox" 
+      <input type="checkbox" class="priority" 
         id = "priority"
         name = "priority"
         v-model=priority
@@ -92,7 +92,7 @@
           priority: false,
           showErrorMessage: false,
           showSucceedMessage: false,
-          logued: true,
+          logued: false,
         }
     },
 
@@ -111,8 +111,7 @@
         if (this.title && this.description) {
           var f = new Date();
           this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-          this.showSucceedMessage = true
-          console.log(this.title+"\n"+this.description+"\n"+this.categoriesSelected+"\n"+this.status+"\n"+this.creationDate+"\n"+(this.limitDate == null? "Unlimited":limitDate)+"\n"+this.priority)
+          this.showSucceedMessage = true      
         } else {
           this.showErrorMessage = true
         }

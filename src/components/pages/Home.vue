@@ -1,6 +1,6 @@
 <template>
-  <header>
-    <router-link to="/taskf">Create Task</router-link>
+  <section class="control">
+    <router-link to="/taskf" class="router">Create Task</router-link>
     <select v-model=status class="filter">
       <option value="default">All Tasks</option>
       <option value="complete">Complete</option>
@@ -17,14 +17,12 @@
       <option value="default">All categories</option>
       <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>
-  </header>
-  <main>
-    
-  </main>
-  <footer>
+  </section>
+  
+  <section class="bt-complete">
     <button @click="">Marck all tasks as complete</button>
     <button @click="">Delete all complete tasks</button>
-  </footer>
+  </section>
 </template>
 
 <script>
