@@ -1,0 +1,31 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    width: 100%;
+    margin-bottom: 5%;
+  }
+  
+  .icon {
+    height: 100%;
+  }
+  
+  .title {
+    font-size: 250%;
+    font-family: Title;
+    color: var(--title-color);
+    text-shadow: 4px 4px 1px var(--shadow-color);
+  }
+  
+  user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 10%;
+  }
+  
+  user > .icon {
+    height: 50%;
+  }

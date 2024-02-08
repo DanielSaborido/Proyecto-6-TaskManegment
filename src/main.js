@@ -1,6 +1,14 @@
 import { createApp } from 'vue'
 import router from "./components/router/router.js"
-import './style.css'
+//import './style.css'
+import './styles/common.css';
+import './styles/fonts.css';
+import './styles/forms.css';
+import './styles/main.css';
+import './styles/messages.css';
+import './styles/navbar.css';
+import './styles/theme.css';
+import './styles/variables.css';
 import App from './App.vue'
 
 const localTheme = localStorage.getItem('theme')

@@ -1,0 +1,19 @@
+[data-theme="light"] {
+    --background-color: #e2f1fa;
+    --text-color: #2c2d30;
+    --text-color-hover: #00afe4;
+    --bt-background-color: #63b6e6;
+    --bt-background-color-hover: #2890bd;
+    --title-color: #51a6da;
+    --shadow-color: #242543;
+  }
+  
+  [data-theme="dark"] {
+    --background-color: #252441;
+    --text-color: #e2e2e2;
+    --text-color-hover: #c3fbff;
+    --bt-background-color: #0c3b50;
+    --bt-background-color-hover: #081b23;
+    --title-color: #e2e2e2;
+    --shadow-color: #51a6da;
+  }
