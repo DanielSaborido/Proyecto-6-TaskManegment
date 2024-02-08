@@ -16,49 +16,49 @@
     />
     <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
-      <div v-for="category in categories" class="category">
-        <input type="checkbox" 
+      <section class="container category" v-for="category in categories">
+        <input type="checkbox" class="checkbox" 
           v-bind:id = category
           name = "category"
           v-bind:value="category"
           v-model="categoriesSelected"
         />
         <label v-bind:htmlFor=category>{{category}}</label>
-      </div>
+      </section>
     </section>
     <section class="categories" v-if="logued">
-      <div v-for="(opcion, index) in categoriesCreated" :key="index" class="category">
-        <input type="checkbox" v-bind:value="categoriesCreated[index].category" v-model="categoriesSelected">
+      <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
+        <input type="checkbox" class="checkbox" v-bind:value="categoriesCreated[index].category" v-model="categoriesSelected">
         <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
-      </div>
+      </section>
     </section>
     <label htmlFor="status">Status Task:</label>
-    <select v-model=status>
+    <select v-model=status class="select">
       <option value="complete">Complete</option>
       <option value="processing">Processing</option>
       <option value="pending">Pending</option>
     </select>
     <label for="limitDate">Limit Date:</label>
     <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
-    <div>
-      <input type="checkbox" 
+    <section class="container">
+      <input type="checkbox" class="checkbox" 
         id = "priority"
         name = "priority"
         v-model=priority
       />
       <label htmlFor="priority">Task priority</label>
-    </div>
+    </section>
     <button type="submit">Create Task</button>
   </form>
-  <div v-if="showErrorMessage" class="error-message">
+  <section class="container error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="{title}">No title of task.</li>
       <li v-if="{description}">The task has not description.</li>
     </ul>
     <button @click="hideMessage">Close</button>
-  </div>
-  <div v-if="showSucceedMessage" class="succeed-message">
+  </section>
+  <section class="container succeed-message" v-if="showSucceedMessage">
     <p>Task data: </p>
     <ul>
       <li>Title: {{ title }}</li>
@@ -70,7 +70,7 @@
       <li>priority: {{ priority }}</li>
     </ul>
     <button @click="hideMessage">Close</button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -92,7 +92,7 @@
           priority: false,
           showErrorMessage: false,
           showSucceedMessage: false,
-          logued: false,
+          logued: true,
         }
     },
 

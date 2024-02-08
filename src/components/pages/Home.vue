@@ -1,19 +1,19 @@
 <template>
   <header>
     <router-link to="/taskf">Create Task</router-link>
-    <select v-model=status>
+    <select v-model=status class="filter">
       <option value="default">All Tasks</option>
       <option value="complete">Complete</option>
       <option value="processing">Processing</option>
       <option value="pending">Pending</option>
     </select>
-    <select v-model=order>
+    <select v-model=order class="filter">
       <option value="default">Order by</option>
       <option value="priority">Priority</option>
       <option value="status">Status</option>
       <option value="date">Date</option>
     </select>
-    <select v-model=category v-if=(categories.length)>
+    <select v-model=category v-if=(categories.length) class="filter">
       <option value="default">All categories</option>
       <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>

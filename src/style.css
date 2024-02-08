@@ -129,11 +129,11 @@ input {
   width: 100%;
 }
 
-input[type="checkbox"]{
+.checkbox {
   width: 20%;
 }
 
-div {
+.container {
   width: 100%;
 }
 
@@ -159,8 +159,9 @@ form > a {
   border: 0;
 }
 
-form > select {
+.select {
   width: 100%;
+  margin-bottom: 12px;
 }
 
 header {
@@ -169,7 +170,7 @@ header {
   align-items: baseline;
 }
 
-select {
+.filter {
   width: 20%;
   padding: 8px;
   border-radius: 10px;
@@ -179,6 +180,10 @@ select {
 #app {
   width: 100%;
   text-align: center;
+}
+
+.alert {
+  color: rgb(255, 0, 0);
 }
 
 .error-message {

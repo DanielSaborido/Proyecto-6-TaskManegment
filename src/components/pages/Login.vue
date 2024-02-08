@@ -6,7 +6,7 @@
       name="email"
       v-model=email
     />
-    <p v-if="email && !validateEmail">
+    <p class="alert" v-if="email && !validateEmail">
       Error. The email is not valid.
     </p>
     <label>Password:</label>
@@ -26,7 +26,7 @@
       name="name"
       v-model=name
     />
-    <p v-if="name && !validateName">
+    <p class="alert" v-if="name && !validateName">
       Error. The name is not valid.
     </p>
     <label>Email:</label>
@@ -35,7 +35,7 @@
       name="email"
       v-model=email
     />
-    <p v-if="email && !validateEmail">
+    <p class="alert" v-if="email && !validateEmail">
       Error. The email is not valid.
     </p>
     <label>Password:</label>
@@ -50,7 +50,7 @@
       name="Rpassword"
       v-model=Rpassword
     />
-    <p v-if="Rpassword && !validatePassword">
+    <p class="alert" v-if="Rpassword && !validatePassword">
       Error. The two passwords are diferents.
     </p>
     <label>Phone:</label>
@@ -68,12 +68,12 @@
       name="email"
       v-model=email
     />
-    <p v-if="email && !validateEmail">
+    <p class="alert" v-if="email && !validateEmail">
       Error. The email is not valid.
     </p>
     <button type="submit">Sent recover</button>
   </form>
-  <div v-if="showErrorMessage" class="error-message">
+  <section class="container error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="create && !validateName">Name is not valid.</li>
@@ -82,7 +82,7 @@
       <li v-if="create && !validatePassword">Passwords do not match.</li>
     </ul>
     <button @click="hideErrorMessage">Close</button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -142,7 +142,7 @@
           return this.password === this.Rpassword
       },
       validateName() {
-        const re = /^[A-Z][a-z]{2,}$/
+        const re = /^[a-z]{3,}$/
         return re.test(this.name)
       }
     },

@@ -2,12 +2,12 @@
   <form @submit.prevent="sentComments">
     <label htmlFor="email">Email:</label>
     <input
-      type="email"
+      type="text"
       id="email"
       name="email"
       v-model=email
     />
-    <p v-if="email && !validateEmail">
+    <p class="alert" v-if="email && !validateEmail">
       Error. The email is not valid.
     </p>
     <label htmlFor="comment">Comment:</label>
@@ -19,14 +19,14 @@
     />
     <button type="submit">Send comment</button>
   </form>
-  <div v-if="showErrorMessage" class="error-message">
+  <section class="container error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="!validateEmail">Email is not valid.</li>
       <li v-if="{comment}">There is not comment.</li>
     </ul>
     <button @click="hideErrorMessage">Close</button>
-  </div>
+  </section>
 </template>
 
 <script>
