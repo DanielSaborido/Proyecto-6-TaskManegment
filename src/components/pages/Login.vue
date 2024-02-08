@@ -73,7 +73,7 @@
     </p>
     <button type="submit">Sent recover</button>
   </form>
-  <section class="container error-message" v-if="showErrorMessage" >
+  <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="create && !validateName">Name is not valid.</li>

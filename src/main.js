@@ -9,6 +9,7 @@ import './styles/messages.css';
 import './styles/navbar.css';
 import './styles/theme.css';
 import './styles/variables.css';
+import './styles/error.css';
 import App from './App.vue'
 
 const localTheme = localStorage.getItem('theme')

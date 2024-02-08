@@ -19,7 +19,7 @@
     />
     <button type="submit">Send comment</button>
   </form>
-  <section class="container error-message" v-if="showErrorMessage" >
+  <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="!validateEmail">Email is not valid.</li>

@@ -50,7 +50,7 @@
     </section>
     <button type="submit">Create Task</button>
   </form>
-  <section class="container error-message" v-if="showErrorMessage" >
+  <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
       <li v-if="{title}">No title of task.</li>
@@ -58,7 +58,7 @@
     </ul>
     <button @click="hideMessage">Close</button>
   </section>
-  <section class="container succeed-message" v-if="showSucceedMessage">
+  <section class="container message succeed-message" v-if="showSucceedMessage">
     <p>Task data: </p>
     <ul>
       <li>Title: {{ title }}</li>
