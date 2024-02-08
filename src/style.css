@@ -13,6 +13,8 @@
   -moz-osx-font-smoothing: grayscale;
 } */
 
+/* Global*/
+
 :root {
   font-family: Text;
 }
@@ -52,12 +54,6 @@
   --shadow-color: #51a6da;
 }
 
-.control {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: baseline;
-}
-
 body {
   background: var(--background-color);
   color: var(--text-color);
@@ -74,6 +70,29 @@ body {
 .router:hover {
   color: var(--text-color-hover);
 }
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  color: var(--text-color);
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--bt-background-color);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+  background-color: var(--bt-background-color-hover);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Navbar */
 
 nav {
   display: flex;
@@ -107,31 +126,27 @@ user > .icon {
   height: 50%;
 }
 
+/* Main */
+
+.control {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: baseline;
+}
+
+.filter {
+  width: 20%;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
 .bt-complete{
   display: flex;
   justify-content: space-around;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  color: var(--text-color);
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--bt-background-color);
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-  background-color: var(--bt-background-color-hover);
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+/* Formularios */
 
 form {
   display: flex;
@@ -190,16 +205,12 @@ input {
   margin-bottom: 12px;
 }
 
-.filter {
-  width: 20%;
-  padding: 8px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-}
-
+/*  Alerta de formulario*/
 .alert {
   color: rgb(255, 0, 0);
 }
+
+/* Caja de mensajes */
 
 .error-message {
   position: absolute;
