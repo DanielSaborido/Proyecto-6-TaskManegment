@@ -1,18 +1,29 @@
 .posit {
     margin: 0 auto;
-    width: 40%;
-    height: 30%;
+    width: 60%;
     background-color: #ffd700;
-    animation: animacionReduce 7s ease forwards;
     color: #2c2d30;
     display: flex;
+    box-shadow: 50px 50px 25px rgba(0, 0, 0, 0.5);
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
-  .typing-animation {
+  .paste {
+    animation: animacionReduce 7s ease forwards;
+  }
+
+  .number {
+    font-family: Title;
+    font-size: 500%;
+  }
+
+  .info {
     font-size: 300%;
+  }
+
+  .typing-animation {
     overflow: hidden;
     white-space: nowrap;
     animation: typing 2s steps(25) forwards;
@@ -31,7 +42,7 @@
   @keyframes animacionReduce {
     from {
       transform: scale(1);
-      box-shadow: 200px 200px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 50px 50px 25px rgba(0, 0, 0, 0.5);
     }
     to {
       transform: scale(0.6);
