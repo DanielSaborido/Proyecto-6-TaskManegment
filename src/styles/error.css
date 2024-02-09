@@ -3,7 +3,8 @@
     width: 40%;
     height: 30%;
     background-color: #ffd700;
-    animation: animacionReduce 15s ease forwards;
+    animation: animacionReduce 7s ease forwards;
+    color: #2c2d30;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,7 +12,7 @@
   }
 
   .typing-animation {
-    font-size: 200%;
+    font-size: 300%;
     overflow: hidden;
     white-space: nowrap;
     animation: typing 2s steps(25) forwards;
@@ -30,7 +31,7 @@
   @keyframes animacionReduce {
     from {
       transform: scale(1);
-      box-shadow: 250px 250px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 200px 200px 10px rgba(0, 0, 0, 0.5);
     }
     to {
       transform: scale(0.6);

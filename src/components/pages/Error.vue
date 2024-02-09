@@ -1,6 +1,6 @@
 <template>
     <section class="posit">
-       <h2 class="typing-animation" v-if="showErrorMessage">404</h2>
+       <h2 class="typing-animation">404</h2>
         <h3 class="typing-animation" v-if="showErrorMessage">ERROR. Page not found</h3> 
     </section>
 </template>

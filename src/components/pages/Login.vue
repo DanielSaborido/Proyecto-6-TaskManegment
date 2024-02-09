@@ -61,6 +61,7 @@
     />
     <button type="submit">Create Account</button>
   </form>
+  <button v-show=create @click="create=false; login=true">Back to login</button>
   <form v-show=forget @submit.prevent="rememberPassword">
     <label>Email:</label>
     <input
@@ -73,6 +74,7 @@
     </p>
     <button type="submit">Sent recover</button>
   </form>
+  <button v-show=forget @click="forget=false; login=true">Back to login</button>
   <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
     <ul>
