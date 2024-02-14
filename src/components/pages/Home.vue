@@ -18,8 +18,8 @@
       <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>
   </section>
-  <section class="tasks">
-    <div v-for="(task, index) in tasks" :key="index">
+  <section v-if="tasks.length > 0" class="tasks">
+    <div v-for="(task, index) in tasks" :key="index" class="task">
       <h2>{{ task.title }}</h2>
       <p>{{ task.description }}</p>
       <p>{{ task.categories }}</p>
@@ -27,6 +27,10 @@
       <p>{{ task.limitDate }}</p>
       <p>{{ task.priority }}</p>
     </div>
+  </section>
+  <section v-else>
+    <h1>You don't have task to do.</h1>
+    <h3>Start creating tasks to do </h3>
   </section>
   <section class="bt-complete">
     <button @click="">Marck all tasks as complete</button>

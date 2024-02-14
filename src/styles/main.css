@@ -15,3 +15,16 @@
     display: flex;
     justify-content: space-around;
   }
+
+  .tasks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .task {
+    flex-basis: calc(25% - 10px);
+    box-sizing: border-box;
+    height: 200px;
+  }
+  
