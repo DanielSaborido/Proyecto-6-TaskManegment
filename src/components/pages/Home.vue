@@ -18,8 +18,8 @@
       <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>
   </section>
-  <section v-if="tasks.length > 0" class="tasks">
-    <div v-for="(task, index) in tasks" :key="index" class="task">
+  <section v-if="filteredTasks.length > 0" class="tasks">
+    <div v-for="(task, index) in filteredTasks" :key="index" class="task">
       <h2>{{ task.title }}</h2>
       <p>{{ task.description }}</p>
       <p>{{ task.categories }}</p>
@@ -47,10 +47,51 @@
         categories: ["Home","Job","Others"],
         category: "default",
         tasks: [],
+        filteredTasks: [],
       }
     },
+    watch: {
+      tasks: {
+        handler() {
+          this.filterTasks()
+        },
+        deep: true,
+      },
+      status() {
+        this.filterTasks()
+      },
+      order() {
+        this.sortTasks()
+      },
+      category() {
+        this.filterTasks()
+      },
+    },
+    methods: {
+      filterTasks() {
+        this.filteredTasks = this.tasks.filter(task => {
+          return (this.status === 'default' || task.status === this.status) &&
+                (this.category === 'default' || task.categories.includes(this.category))
+        })
+        this.sortTasks()
+      },
+      sortTasks() {
+        if (this.order !== 'default') {
+          this.filteredTasks.sort((a, b) => {
+            if (this.order === 'priority') {
+              return b.priority - a.priority
+            } else if (this.order === 'status') {
+              return a.status.localeCompare(b.status)
+            } else if (this.order === 'date') {
+              return new Date(a.limitDate) - new Date(b.limitDate)
+            }
+          })
+        }
+      },
+    },
     mounted() {
-      this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    }
+      this.tasks = JSON.parse(localStorage.getItem('tasks')) || []
+      this.filterTasks()
+    },
   } 
 </script>

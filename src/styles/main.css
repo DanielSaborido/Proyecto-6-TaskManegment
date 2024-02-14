@@ -26,5 +26,6 @@
     flex-basis: calc(25% - 10px);
     box-sizing: border-box;
     height: 200px;
+    background-color: darkgoldenrod;
   }
   
