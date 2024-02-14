@@ -59,6 +59,7 @@
     <button @click="hideMessage">Close</button>
   </section>
   <section class="container message succeed-message" v-if="showSucceedMessage">
+    <h3>Task Successfully Created</h3>
     <p>Task data: </p>
     <ul>
       <li>Title: {{ title }}</li>
@@ -83,7 +84,7 @@
         return{
           title: null,
           description: null,
-          categories: ["Escuela","Casa","Trabajo","Ocio"],
+          categories: ["Home","Job","Others"],
           categoriesCreated: [{ category: '' }],
           categoriesSelected: [],
           status: "pending",
@@ -99,19 +100,31 @@
     methods:{
       createCategory(index) {
         if (index === this.categoriesCreated.length - 1) {
-          const currentCategory = this.categoriesCreated[index].category.trim();
+          const currentCategory = this.categoriesCreated[index].category.trim()
           if (currentCategory !== '') {
-            this.categoriesCreated.push({ category: '' });
+            this.categoriesCreated.push({ category: '' })
           } else {
-            this.categoriesCreated.splice(index, 1);
+            this.categoriesCreated.splice(index, 1)
           }
         }
       },
       createTask(){
         if (this.title && this.description) {
-          var f = new Date();
+          var f = new Date()
           this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-          this.showSucceedMessage = true      
+          let task = {
+            title: this.title,
+            description: this.description,
+            categories: this.categoriesSelected,
+            status: this.status,
+            creationDate: this.creationDate,
+            limitDate: this.limitDate,
+            priority: this.priority
+          }
+          let tasks = JSON.parse(localStorage.getItem('tasks')) || []
+          tasks.push(task)
+          localStorage.setItem('tasks', JSON.stringify(tasks))   
+          this.showSucceedMessage = true
         } else {
           this.showErrorMessage = true
         }

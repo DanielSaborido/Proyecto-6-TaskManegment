@@ -18,7 +18,16 @@
       <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
     </select>
   </section>
-  
+  <section class="tasks">
+    <div v-for="(task, index) in tasks" :key="index">
+      <h2>{{ task.title }}</h2>
+      <p>{{ task.description }}</p>
+      <p>{{ task.categories }}</p>
+      <p>{{ task.status }}</p>
+      <p>{{ task.limitDate }}</p>
+      <p>{{ task.priority }}</p>
+    </div>
+  </section>
   <section class="bt-complete">
     <button @click="">Marck all tasks as complete</button>
     <button @click="">Delete all complete tasks</button>
@@ -28,12 +37,16 @@
 <script>
   export default {
     data() {
-        return{
-          status: "default",
-          order: "default",
-          categories: [],
-          category: "default",
-        }
+      return{
+        status: "default",
+        order: "default",
+        categories: ["Home","Job","Others"],
+        category: "default",
+        tasks: [],
+      }
+    },
+    mounted() {
+      this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     }
   } 
 </script>
