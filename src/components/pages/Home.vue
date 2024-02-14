@@ -33,8 +33,8 @@
     <h3>Start creating tasks to do </h3>
   </section>
   <section class="bt-complete">
-    <button @click="">Marck all tasks as complete</button>
-    <button @click="">Delete all complete tasks</button>
+    <button @click="completeAllTasks">Marck all tasks as complete</button>
+    <button @click="deleteCompletedTasks">Delete all complete tasks</button>
   </section>
 </template>
 
@@ -87,6 +87,17 @@
             }
           })
         }
+      },
+      completeAllTasks() {
+        this.filteredTasks.forEach(task => {
+          task.status = 'complete'
+        })
+        localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      },
+      deleteCompletedTasks() {
+        this.filteredTasks = this.filteredTasks.filter(task => task.status !== 'complete')
+        this.tasks = this.tasks.filter(task => task.status !== 'complete')
+        localStorage.setItem('tasks', JSON.stringify(this.tasks))
       },
     },
     mounted() {
