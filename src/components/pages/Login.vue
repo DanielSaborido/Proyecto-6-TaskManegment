@@ -104,9 +104,14 @@
     },
 
     methods: {
+      async getUsers(){
+        const users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
+        return users
+      },
       loginAcount() {
         if (this.validateEmail && this.password) {
-          console.log("Login successful!")
+          const users = this.getUsers()
+          console.log(users)
         } else {
           console.log("Login failed. Please check your email and password.")
           this.showErrorMessage = true
