@@ -18,7 +18,7 @@ nav {
     text-shadow: 4px 4px 1px var(--shadow-color);
   }
   
-  user {
+  .user {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -26,6 +26,6 @@ nav {
     width: 10%;
   }
   
-  user > .icon {
+  .user > .icon {
     height: 50%;
   }

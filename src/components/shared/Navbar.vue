@@ -6,7 +6,7 @@
       <img v-else src="../../assets/dark/logo-fast-task-version-blanca.svg" alt="Home" class="icon">
     </router-link>
     <h1 class="title">{{ title }}</h1>
-    <user>
+    <section class="user">
       <img v-if="theme === 'light'" src="../../assets/light/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
       <img v-else src="../../assets/dark/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
       <router-link to="/contact" class="icon">
@@ -17,7 +17,7 @@
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
       </router-link>
-    </user>
+    </section>
   </nav>
 </template>
 

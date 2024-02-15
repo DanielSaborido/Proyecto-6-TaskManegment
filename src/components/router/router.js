@@ -1,8 +1,14 @@
 import {createRouter, createWebHashHistory} from "vue-router"
 import Home from '../pages/Home.vue'
+import autentication from "./auth_user"
 
 const routes = [
-  { path: '/', component: Home, meta: { title: 'Fast Task' } },
+  { path: '/', beforeEnter: [autentication], component: Home, meta: { title: 'Fast Task' } },
+  { 
+    path: '/tasks',
+    component: () => import('../pages/UserTasks.vue'),
+    meta: { title: 'Fast Task' }
+  },
   { 
     path: '/taskf',
     component: () => import('../pages/TasksForm.vue'),

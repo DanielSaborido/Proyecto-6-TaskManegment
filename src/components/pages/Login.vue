@@ -100,18 +100,23 @@
           create: false,
           forget: false,
           showErrorMessage: false,
+          users: null,
+          userData: null,
         }
     },
 
     methods: {
       async getUsers(){
-        const users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
-        return users
+        this.users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
       },
       loginAcount() {
         if (this.validateEmail && this.password) {
-          const users = this.getUsers()
-          console.log(users)
+          let user = this.users.find(user => user.email === this.email)
+          if (user) {
+            localStorage.setItem('userId', user.id)
+          } else {
+            console.log("El correo no se encontró en la base de datos.")
+          }
         } else {
           console.log("Login failed. Please check your email and password.")
           this.showErrorMessage = true
@@ -153,5 +158,8 @@
         return re.test(this.name)
       }
     },
+    mounted(){
+      this.getUsers()
+    }
   } 
 </script>

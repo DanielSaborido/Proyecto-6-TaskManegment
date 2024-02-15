@@ -70,7 +70,7 @@
       <li v-else>limitDate: Unlimited</li>
       <li>priority: {{ priority }}</li>
     </ul>
-    <button @click="hideMessage">Close</button>
+    <router-link to="/tasks" class="router">Close</router-link>
   </section>
 </template>
 
