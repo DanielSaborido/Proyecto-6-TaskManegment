@@ -10,11 +10,6 @@
     border-radius: 10px;
     margin-bottom: 12px;
   }
-  
-  .bt-complete{
-    display: flex;
-    justify-content: space-around;
-  }
 
   .tasks {
     display: flex;
@@ -24,6 +19,7 @@
   }
   
   .task {
+    position: relative;
     flex-basis: calc(25% - 10px);
     padding: 8px;
     box-sizing: border-box;
@@ -32,5 +28,27 @@
     margin: 5px;
     height: 250px;
     background-color: rgba(243, 240, 78, 0.822);
+  }
+
+  .priority {
+    position: absolute;
+    top: -7.5px;
+    right: 7.5px;
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 2.5px;
+  }
+
+  .hight{
+    background-color: rgba(240, 108, 20, 0.877);
+  }
+
+  .low{
+    background-color: rgba(79, 190, 28, 0.877);
+  }
+  
+  .bt-complete{
+    display: flex;
+    justify-content: space-around;
   }
   

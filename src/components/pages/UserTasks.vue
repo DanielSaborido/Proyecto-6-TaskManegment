@@ -20,12 +20,11 @@
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
     <div v-for="(task, index) in filteredTasks" :key="index" class="task">
-      <h2>{{ task.title }}</h2>
+      <h3>{{ task.title }}</h3>
       <p>{{ task.description }}</p>
       <p>{{ task.categories }}</p>
       <p>{{ task.status }}</p>
-      <p>{{ task.limitDate? task.limitDate:"Unlimited date"  }}</p>
-      <p>{{ task.priority? "Hight priority":"Low priority" }}</p>
+      <p :class="{ priority:true, hight:task.priority , low:!task.priority }">{{ task.priority? "Hight priority":"Low priority" }}</p>
     </div>
   </section>
   <section v-else>
