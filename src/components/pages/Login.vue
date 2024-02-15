@@ -114,6 +114,7 @@
           let user = this.users.find(user => user.email === this.email)
           if (user) {
             localStorage.setItem('userId', user.id)
+            this.$router.push('/tasks')
           } else {
             console.log("El correo no se encontró en la base de datos.")
           }

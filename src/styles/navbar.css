@@ -8,6 +8,7 @@ nav {
   
   .icon {
     height: 100%;
+    cursor: pointer;
   }
   
   .title {
@@ -27,4 +28,5 @@ nav {
   
   .user > .icon {
     height: 50%;
+    cursor: pointer;
   }

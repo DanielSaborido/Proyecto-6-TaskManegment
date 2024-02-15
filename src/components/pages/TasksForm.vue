@@ -16,20 +16,20 @@
     />
     <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
-      <section class="container category" v-for="category in categories">
+      <section class="container category" v-for="(category,index) in categories">
         <input type="checkbox" class="checkbox" 
-          v-bind:id = category
+          v-bind:id = index+1
           name = "category"
-          v-bind:value="category"
+          v-bind:value="index+1"
           v-model="categoriesSelected"
         />
-        <label v-bind:htmlFor=category>{{category}}</label>
+        <label v-bind:htmlFor=index+1>{{category}}</label>
       </section>
     </section>
     <section class="categories" v-if="logued">
       <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
-        <input type="checkbox" class="checkbox" v-bind:value="categoriesCreated[index].category" v-model="categoriesSelected">
-        <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
+        <input type="checkbox" class="checkbox" v-bind:value="categoriesCreated[index]+4" v-model="categoriesSelected">
+        <input type="text" v-model="categoriesCreated[index]" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
       </section>
     </section>
     <label htmlFor="status">Status Task:</label>
@@ -58,28 +58,10 @@
     </ul>
     <button @click="hideMessage">Close</button>
   </section>
-  <section class="container message succeed-message" v-if="showSucceedMessage">
-    <h3>Task Successfully Created</h3>
-    <p>Task data: </p>
-    <ul>
-      <li>Title: {{ title }}</li>
-      <li>Description: {{ description }}</li>
-      <li v-if=(categoriesSelected.length)>Categories: {{ categoriesSelected }}</li>
-      <li>Creation Date: {{ creationDate }}</li>
-      <li v-if="{limitDate}">limitDate: {{ limitDate }}</li>
-      <li v-else>limitDate: Unlimited</li>
-      <li>priority: {{ priority }}</li>
-    </ul>
-    <router-link to="/tasks" class="router">Close</router-link>
-  </section>
 </template>
 
 <script>
   export default {
-    // props:{
-    //   logued: Boolean,
-    // },
-
     data() {
         return{
           title: null,
@@ -92,7 +74,6 @@
           limitDate: null,
           priority: false,
           showErrorMessage: false,
-          showSucceedMessage: false,
           logued: false,
         }
     },
@@ -124,7 +105,7 @@
           let tasks = JSON.parse(localStorage.getItem('tasks')) || []
           tasks.push(task)
           localStorage.setItem('tasks', JSON.stringify(tasks))   
-          this.showSucceedMessage = true
+          this.$router.push('/tasks')
         } else {
           this.showErrorMessage = true
         }

@@ -14,23 +14,27 @@
       <option value="date">Date</option>
     </select>
     <select v-model=category v-if=(categories.length) class="filter">
-      <option value="default">All categories</option>
-      <option v-for="categoryData in categories" v-bind:value=categoryData>{{categoryData}}</option>
+      <option v-for="(categoryData,index) in categories" v-bind:value=index>{{categoryData}}</option>
     </select>
   </section>
-  <section v-if="filteredTasks.length > 0" class="tasks">
-    <div v-for="(task, index) in filteredTasks" :key="index" class="task">
+  <article v-if="filteredTasks.length > 0" class="tasks">
+    <section v-for="(task, index) in filteredTasks" :key="index" class="task">
       <h3>{{ task.title }}</h3>
-      <p>{{ task.description }}</p>
-      <p>{{ task.categories }}</p>
-      <p>{{ task.status }}</p>
-      <p :class="{ priority:true, hight:task.priority , low:!task.priority }">{{ task.priority? "Hight priority":"Low priority" }}</p>
-    </div>
-  </section>
-  <section v-else>
+      <p>{{ truncateDescription(task.description) }}</p>
+      <p v-if="task.categories.length">Categories: {{ task.categories }}</p>
+      <p>Status: {{ task.status }}</p>
+      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click="changePriority(index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
+      <section class="fastAjust">
+        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(index)">
+        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(index)">
+        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(index)">
+      </section>
+    </section>
+  </article>
+  <article v-else>
     <h1>You don't have task to do.</h1>
     <h3>Start creating tasks to do </h3>
-  </section>
+  </article>
   <section class="bt-complete">
     <button @click="completeAllTasks">Marck all tasks as complete</button>
     <button @click="deleteCompletedTasks">Delete all complete tasks</button>
@@ -43,8 +47,8 @@
       return{
         status: "default",
         order: "default",
-        categories: ["Home","Job","Others"],
-        category: "default",
+        category: 0,
+        categories: ["All categories","Home","Job","Others"],
         tasks: [],
         filteredTasks: [],
         userData: null,
@@ -75,7 +79,7 @@
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-                (this.category === 'default' || task.categories.includes(this.category))
+                (this.category === 0 || task.categories.includes(this.category))
         })
         this.sortTasks()
       },
@@ -91,6 +95,36 @@
             }
           })
         }
+      },
+      truncateDescription(description) {
+        if (description.length > 29) {
+          return description.substring(0, 26) + '...'
+        } else {
+          return description
+        }
+      },
+      changePriority(id){
+        this.tasks[id].priority = !this.tasks[id].priority
+      },
+      deleteTask(index) {
+        if (confirm("Are you sure you want to delete this task?")) {
+          this.tasks.splice(index, 1)
+          localStorage.setItem("tasks", JSON.stringify(this.tasks))
+        }
+      },
+      updateTaskStatus(index) {
+        const task = this.filteredTasks[index]
+        if (task.status === "pending") {
+          task.status = "processing"
+        } else if (task.status === "processing") {
+          task.status = "complete"
+        } else if (task.status === "complete") {
+          task.status = "processing"
+        }
+        localStorage.setItem("tasks", JSON.stringify(this.tasks))
+      },
+      goToEditPage(index) {
+        console.log(index)
       },
       completeAllTasks() {
         this.filteredTasks.forEach(task => {

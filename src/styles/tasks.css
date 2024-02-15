@@ -38,17 +38,44 @@
     border-radius: 25px;
     padding: 2.5px;
   }
-
   .hight{
     background-color: rgba(240, 108, 20, 0.877);
   }
-
   .low{
     background-color: rgba(79, 190, 28, 0.877);
+  }
+
+  .fastAjust{
+    display: flex;
+    flex-wrap: wrap;
+    height: 20%;
+    justify-content: space-between;
+  }
+  .delete{
+    cursor: pointer;
+    height: 100%;
+  }
+  .edit{
+    cursor: pointer;
+    height: 100%;
+  }
+  .update{
+    cursor: pointer;
+    height: 100%;
+  }
+  .delete:hover{
+    content: url('../assets/tasksAjusts/deleteHover.png');
+  }
+  .edit:hover{
+    content: url('../assets/tasksAjusts/libroHover.png');
+  }
+  .update:hover{
+    transform: rotate(180deg);
   }
   
   .bt-complete{
     display: flex;
+    position: sticky;
     justify-content: space-around;
   }
   
