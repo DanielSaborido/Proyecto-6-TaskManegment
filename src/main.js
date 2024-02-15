@@ -5,6 +5,7 @@ import './styles/common.css';
 import './styles/fonts.css';
 import './styles/forms.css';
 import './styles/tasks.css';
+import './styles/rotate.css';
 import './styles/messages.css';
 import './styles/navbar.css';
 import './styles/theme.css';

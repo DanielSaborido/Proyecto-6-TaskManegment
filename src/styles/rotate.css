@@ -1,0 +1,36 @@
+
+.rotate10 {
+  transform:rotate(10deg);
+}
+
+.rotate75 {
+  transform:rotate(7.5deg);
+}
+
+.rotate5 {
+  transform:rotate(5deg);
+}
+
+.rotate25 {
+  transform:rotate(2.5deg);
+}
+
+.rotate0 {
+  transform:rotate(0deg);
+}
+
+.rotate-10 {
+    transform:rotate(-10deg);
+  }
+  
+  .rotate-75 {
+    transform:rotate(-7.5deg);
+  }
+  
+  .rotate-5 {
+    transform:rotate(-5deg);
+  }
+  
+  .rotate-25 {
+    transform:rotate(-2.5deg);
+  }

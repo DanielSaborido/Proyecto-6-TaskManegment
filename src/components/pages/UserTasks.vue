@@ -18,10 +18,10 @@
     </select>
   </section>
   <article v-if="filteredTasks.length > 0" class="tasks">
-    <section v-for="(task, index) in filteredTasks" :key="index" class="task">
+    <section v-for="(task, index) in filteredTasks" :key="index" class="task" :style="{ transform: `rotate(${getRandomRotation()}deg)` }">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
-      <p v-if="task.categories.length">Categories: {{ task.categories }}</p>
+      <p>Categories: {{ task.categories }}</p>
       <p>Status: {{ task.status }}</p>
       <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click="changePriority(index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
@@ -76,6 +76,11 @@
         const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
         this.userData = await response.json()
       },
+      getRandomRotation() {
+        const rotations = [10, 7.5, 5, 2.5, 0.5, -10, -7.5, -5, -2.5];
+        const randomIndex = Math.floor(Math.random() * rotations.length);
+        return rotations[randomIndex];
+      },
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
@@ -89,7 +94,8 @@
             if (this.order === 'priority') {
               return b.priority - a.priority
             } else if (this.order === 'status') {
-              return a.status.localeCompare(b.status)
+              const orderMapping = { 'pending': 1, 'processing': 2, 'complete': 3 }
+              return orderMapping[a.status] - orderMapping[b.status]
             } else if (this.order === 'date') {
               return new Date(a.limitDate) - new Date(b.limitDate)
             }

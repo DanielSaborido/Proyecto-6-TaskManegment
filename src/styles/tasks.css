@@ -20,20 +20,21 @@
   
   .task {
     position: relative;
-    flex-basis: calc(25% - 10px);
-    padding: 8px;
+    flex-basis: calc(25% - 50px);
+    padding: 15px;
     box-sizing: border-box;
     text-align: justify;
     color: black;
-    margin: 5px;
-    height: 250px;
+    margin: 25px;
+    height: 300px;
     background-color: rgba(243, 240, 78, 0.822);
+		box-shadow:10px 10px 30px rgba(0, 0, 0, 0.8);
   }
 
   .priority {
     position: absolute;
-    top: -7.5px;
-    right: 7.5px;
+    top: -15px;
+    right: 5px;
     border: 2px solid black;
     border-radius: 25px;
     padding: 2.5px;
@@ -48,7 +49,7 @@
   .fastAjust{
     display: flex;
     flex-wrap: wrap;
-    height: 20%;
+    height: 17.5%;
     justify-content: space-between;
   }
   .delete{
