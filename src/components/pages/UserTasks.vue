@@ -72,11 +72,6 @@
       async getUserData(id){
         const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
         this.userData = await response.json()
-        let apiTasks = this.userData.data.tasks
-        let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
-        this.tasks = [...localTasks, ...apiTasks]
-        localStorage.setItem('tasks', JSON.stringify(this.tasks))
-        this.filterTasks()
       },
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
@@ -112,9 +107,15 @@
     },
     mounted: async function() {
       const userLogued = localStorage.getItem('userId') || null
+      let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
       if (userLogued) {
         await this.getUserData(userLogued)
+        let apiTasks = this.userData.data.tasks
+        this.tasks = [...localTasks, ...apiTasks]
+      } else {
+        this.tasks = localTasks
       }
+      this.filterTasks()
     },
   } 
 </script>

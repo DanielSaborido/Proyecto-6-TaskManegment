@@ -1,8 +1,8 @@
 <template>
   <nav>
     <router-link to="/" class="icon">
-      <img v-if="route === '/'" src="../../assets/imagotipo-fast-task.svg" alt="Home" class="icon">
-      <img v-else-if="theme === 'light' && route !== '/'" src="../../assets/light/logo-horizontal-fast-task.svg" alt="Home" class="icon">
+      <img v-if="route === '/' || route === '/tasks'" src="../../assets/imagotipo-fast-task.svg" alt="Home" class="icon">
+      <img v-else-if="theme === 'light' && route !== '/' && route !== '/tasks'" src="../../assets/light/logo-horizontal-fast-task.svg" alt="Home" class="icon">
       <img v-else src="../../assets/dark/logo-fast-task-version-blanca.svg" alt="Home" class="icon">
     </router-link>
     <h1 class="title">{{ title }}</h1>
