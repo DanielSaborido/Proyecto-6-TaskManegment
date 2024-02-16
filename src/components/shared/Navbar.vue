@@ -71,8 +71,6 @@
       logout() {
         localStorage.removeItem('userId')
         localStorage.removeItem('tasks')
-        localStorage.removeItem('trialStarted')
-        localStorage.removeItem('trialEndDate')
         this.userData = null
         this.$router.push('/')
       }

@@ -95,7 +95,6 @@
           forget: false,
           showErrorMessage: false,
           users: null,
-          userData: null,
         }
     },
     methods: {
@@ -108,6 +107,7 @@
           if (user) {
             localStorage.removeItem('trialStarted')
             localStorage.removeItem('trialEndDate')
+            localStorage.removeItem('tasks')
             localStorage.setItem('userId', user.id)
             this.$router.push('/tasks')
           } else {
