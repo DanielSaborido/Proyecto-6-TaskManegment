@@ -1,7 +1,7 @@
 export function isAuthenticated() {
   const userLogued = localStorage.getItem('userId') || null
   const trialStarted = localStorage.getItem('trialStarted') || false
-  const trialEndDate = localStorage.getItem('trialEndDate')
+  const trialEndDate = new Date(localStorage.getItem('trialEndDate'))
   const date = new Date()
   if (userLogued) {
     return true
