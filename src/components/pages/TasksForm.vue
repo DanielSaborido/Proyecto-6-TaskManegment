@@ -28,8 +28,8 @@
     </section>
     <section class="categories" v-if="logued">
       <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
-        <input type="radio" class="checkbox" v-bind:value="categoriesCreated[index]+4" v-model="categorieSelected">
-        <input type="text" v-model="categoriesCreated[index]" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
+        <input type="radio" class="checkbox" v-bind:value="index+5" v-model="categorieSelected">
+        <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
       </section>
     </section>
     <label htmlFor="status">Status Task:</label>
@@ -74,26 +74,28 @@
           limitDate: null,
           priority: false,
           showErrorMessage: false,
-          logued: false,
+          logued: !!localStorage.getItem('userId'),
         }
     },
 
     methods:{
       createCategory(index) {
         if (index === this.categoriesCreated.length - 1) {
-          const currentCategory = this.categoriesCreated[index].category.trim()
+          const currentCategory = this.categoriesCreated[index].category.trim();
           if (currentCategory !== '') {
-            this.categoriesCreated.push({ category: '' })
+            this.categoriesCreated.push({ category: '' });
           } else {
-            this.categoriesCreated.splice(index, 1)
+            this.categoriesCreated.splice(index, 1);
           }
         }
       },
       createTask(){
         if (this.title && this.description) {
+          let tasks = JSON.parse(localStorage.getItem('tasks')) || []
           var f = new Date()
           this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
           let task = {
+            id: tasks.length,
             title: this.title,
             description: this.description,
             category_id: this.categorieSelected,
@@ -102,7 +104,6 @@
             limitDate: this.limitDate,
             priority: this.priority
           }
-          let tasks = JSON.parse(localStorage.getItem('tasks')) || []
           tasks.push(task)
           localStorage.setItem('tasks', JSON.stringify(tasks))   
           this.$router.push('/tasks')
