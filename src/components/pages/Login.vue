@@ -19,7 +19,7 @@
     <button type="submit">Log in</button>
   </form>
   <button v-show=login @click="create=true; login=false">Create Account</button>
-  <form v-show=create @submit.prevent="createAcount">
+  <form v-show=create @submit.prevent="createAccount">
     <label>Name:</label>
     <input
       type="name"
@@ -53,12 +53,6 @@
     <p class="alert" v-if="Rpassword && !validatePassword">
       Error. The two passwords are diferents.
     </p>
-    <label>Phone:</label>
-    <input
-      type="tel"
-      name="phone"
-      v-model=phone
-    />
     <button type="submit">Create Account</button>
   </form>
   <button v-show=create @click="create=false; login=true">Back to login</button>
@@ -104,7 +98,6 @@
           userData: null,
         }
     },
-
     methods: {
       async getUsers(){
         this.users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
@@ -123,11 +116,30 @@
           this.showErrorMessage = true
         }
       },
-      createAcount() {
-        if (this.validateName && this.validateEmail && this.validatePassword) {
-          console.log("Account created successfully!")
-          this.create=false
-          this.login=true
+      async createAccount() {
+        if (this.validateName && this.validateEmail && this.validatePassword && !this.emailExists) {
+          try {
+            const response = await fetch('http://api-proyecto-6.test/api/users', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: this.name,
+                email: this.email,
+                password: this.password,
+              }),
+            })
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+            const data = await response.json()
+            console.log(data)
+            this.create = false
+            this.login = true
+          } catch (error) {
+            console.error(error)
+          }
         } else {
           this.showErrorMessage = true
         }
@@ -145,17 +157,19 @@
         this.showErrorMessage = false
       },
     },
-
     computed:{
       validateEmail() {
           const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
           return re.test(this.email)
       },
+      emailExists() {
+        return this.users.find(user => user.email === this.email)
+      },
       validatePassword() {
           return this.password === this.Rpassword
       },
       validateName() {
-        const re = /^[a-z]{3,}$/
+        const re = /^[a-zA-Z\s]{3,}$/
         return re.test(this.name)
       }
     },

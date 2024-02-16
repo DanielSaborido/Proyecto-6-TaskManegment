@@ -57,6 +57,7 @@
         rotationClasses: ["rotate10", "rotate75", "rotate5", "rotate25", "rotate0", "rotate-10", "rotate-75", "rotate-5", "rotate-25"],
         userData: null,
         categoryData: null,
+        userId: localStorage.getItem('userId') || null,
       }
     },
     watch: {
@@ -159,18 +160,26 @@
         this.tasks = this.tasks.filter(task => task.status !== 'complete')
         localStorage.setItem('tasks', JSON.stringify(this.tasks))
       },
+      async fetchDataFromAPI() {
+        try {
+          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
+          const userData = await response.json()
+          const apiTasks = userData.data.tasks
+          return apiTasks
+        } catch (error) {
+          console.error(error)
+          return []
+        }
+      },
     },
     mounted: async function() {
       await this.getCategories()
-      const userLogued = localStorage.getItem('userId') || null
       let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
-      if (userLogued) {
-        await this.getUserData(userLogued)
-        let apiTasks = this.userData.data.tasks
-        this.tasks = [...localTasks, ...apiTasks]
-      } else {
-        this.tasks = localTasks
+      let apiTasks = []
+      if (this.userId) {
+        apiTasks = await this.fetchDataFromAPI()
       }
+      this.tasks = [...localTasks, ...apiTasks]
       this.tasks.forEach(task => {
         task.rotationClass = this.getRandomRotationClass()
       })
