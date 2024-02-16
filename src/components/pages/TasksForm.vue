@@ -17,18 +17,18 @@
     <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
       <section class="container category" v-for="(category,index) in categories">
-        <input type="checkbox" class="checkbox" 
+        <input type="radio" class="checkbox" 
           v-bind:id = index+1
           name = "category"
           v-bind:value="index+1"
-          v-model="categoriesSelected"
+          v-model="categorieSelected"
         />
         <label v-bind:htmlFor=index+1>{{category}}</label>
       </section>
     </section>
     <section class="categories" v-if="logued">
       <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
-        <input type="checkbox" class="checkbox" v-bind:value="categoriesCreated[index]+4" v-model="categoriesSelected">
+        <input type="radio" class="checkbox" v-bind:value="categoriesCreated[index]+4" v-model="categorieSelected">
         <input type="text" v-model="categoriesCreated[index]" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
       </section>
     </section>
@@ -66,9 +66,9 @@
         return{
           title: null,
           description: null,
-          categories: ["Home","Job","Others"],
+          categories: ["Home","Job","Activities","Others"],
           categoriesCreated: [{ category: '' }],
-          categoriesSelected: [],
+          categorieSelected: 0,
           status: "pending",
           creationDate: null,
           limitDate: null,
@@ -96,7 +96,7 @@
           let task = {
             title: this.title,
             description: this.description,
-            categories: this.categoriesSelected,
+            category_id: this.categorieSelected,
             status: this.status,
             creationDate: this.creationDate,
             limitDate: this.limitDate,

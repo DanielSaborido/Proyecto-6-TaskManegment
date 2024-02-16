@@ -18,10 +18,13 @@
     </select>
   </section>
   <article v-if="filteredTasks.length > 0" class="tasks">
-    <section v-for="(task, index) in filteredTasks" :key="index" class="task" :style="{ transform: `rotate(${getRandomRotation()}deg)` }">
+    <section v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
-      <p>Categories: {{ task.categories }}</p>
+      <p>Category: 
+        <img v-if="getCategory(task.category_id).category_photo" :src="getCategory(task.category_id).category_photo" :alt="getCategory(task.category_id).name">
+        <span v-else>{{ getCategory(task.category_id).name }}</span>
+      </p>
       <p>Status: {{ task.status }}</p>
       <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click="changePriority(index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
@@ -48,10 +51,12 @@
         status: "default",
         order: "default",
         category: 0,
-        categories: ["All categories","Home","Job","Others"],
+        categories: ["All categories","Home","Job","Activities","Others"],
         tasks: [],
         filteredTasks: [],
+        rotationClasses: ["rotate10", "rotate75", "rotate5", "rotate25", "rotate0", "rotate-10", "rotate-75", "rotate-5", "rotate-25"],
         userData: null,
+        categoryData: null,
       }
     },
     watch: {
@@ -76,15 +81,18 @@
         const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
         this.userData = await response.json()
       },
-      getRandomRotation() {
-        const rotations = [10, 7.5, 5, 2.5, 0.5, -10, -7.5, -5, -2.5];
-        const randomIndex = Math.floor(Math.random() * rotations.length);
-        return rotations[randomIndex];
+      async getCategories(){
+        const response = await fetch(`http://api-proyecto-6.test/api/categories`)
+        this.categoryData = await response.json()
+      },
+      getRandomRotationClass() {
+        const randomIndex = Math.floor(Math.random() * this.rotationClasses.length);
+        return this.rotationClasses[randomIndex];
       },
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-                (this.category === 0 || task.categories.includes(this.category))
+                (this.category === 0 || task.categories === this.category || task.category_id === this.category)
         })
         this.sortTasks()
       },
@@ -103,10 +111,18 @@
         }
       },
       truncateDescription(description) {
-        if (description.length > 29) {
-          return description.substring(0, 26) + '...'
+        if (description.length > 30) {
+          return description.substring(0, 27) + '...'
         } else {
           return description
+        }
+      },
+      getCategory(categoryId) {
+        if (this.categoryData) {
+          const matchingCategory = this.categoryData.find(category => category.id === categoryId)
+          return matchingCategory ? matchingCategory : { name: 'Unknown', category_photo: null }
+        } else {
+          return { name: 'Unknown', category_photo: null }
         }
       },
       changePriority(id){
@@ -145,6 +161,7 @@
       },
     },
     mounted: async function() {
+      await this.getCategories()
       const userLogued = localStorage.getItem('userId') || null
       let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
       if (userLogued) {
@@ -154,6 +171,9 @@
       } else {
         this.tasks = localTasks
       }
+      this.tasks.forEach(task => {
+        task.rotationClass = this.getRandomRotationClass()
+      })
       this.filterTasks()
     },
   } 
