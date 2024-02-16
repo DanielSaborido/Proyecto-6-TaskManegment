@@ -13,16 +13,31 @@
         <img v-if="theme === 'light'" src="../../assets/light/contact-icon.png" alt="Contact" class="icon">
         <img v-else src="../../assets/dark/contact-icon.png" alt="Contact" class="icon">
       </router-link>
-      <router-link to="/login" class="icon">
+      <router-link v-if="!userData" to="/login" class="icon">
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
       </router-link>
+      <div v-else @click="toggleMenu" class="icon">
+        <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
+        <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
+        <div v-if="showMenu" class="menu">
+          <router-link to="/user">User Data</router-link>
+          <button @click="logout">Logout</button>
+        </div>
+      </div>
     </section>
   </nav>
 </template>
 
 <script>
   export default {
+    data() {
+      return {
+        theme: "",
+        showMenu: false,
+        userData: localStorage.getItem('userId'),
+      }
+    },
     computed: {
       title() {
         return this.$route.meta.title || 'Default Title'
@@ -31,12 +46,17 @@
         return this.$route.path
       },
     },
-    data() {
-      return {
-        theme: "",
-      }
+    watch: {
+      '$route': 'checkUser'
+    },
+    created() {
+      this.loadTheme()
+      this.checkUser();
     },
     methods: {
+      checkUser() {
+        this.userData = localStorage.getItem('userId');
+      },
       loadTheme() {
         this.theme = localStorage.getItem('theme')
       },
@@ -45,14 +65,14 @@
         localStorage.setItem('theme', this.theme)
         document.documentElement.setAttribute('data-theme', this.theme)
       },
-      // getThemeImagePath(imageName) {
-      //   const folder = this.theme === 'light' ? 'light' : 'dark'
-      //   console.log(`../../assets/${folder}/${imageName}.png`)
-      //   return `../../assets/${folder}/${imageName}.png`
-      // },
-    },
-    created() {
-      this.loadTheme()
+      toggleMenu() {
+        this.showMenu = !this.showMenu
+      },
+      logout() {
+        localStorage.removeItem('userId')
+        this.userData = null
+        this.$router.push('/')
+      }
     },
   }
 </script>

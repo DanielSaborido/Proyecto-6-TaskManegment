@@ -1,13 +1,31 @@
 import {createRouter, createWebHashHistory} from "vue-router"
 import Home from '../pages/Home.vue'
-import autentication from "./auth_user"
+import { isAuthenticated, isUserLogged } from "./auth_user"
 
 const routes = [
-  { path: '/', beforeEnter: [autentication], component: Home, meta: { title: 'Fast Task' } },
+  { 
+    path: '/', 
+    component: Home, 
+    meta: { title: 'Fast Task' },
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next('/tasks')
+      } else {
+        next()
+      }
+    } 
+  },
   { 
     path: '/tasks',
     component: () => import('../pages/UserTasks.vue'),
-    meta: { title: 'Fast Task' }
+    meta: { title: 'Fast Task' },
+    beforeEnter: (to, from, next) => {
+      if (!isAuthenticated()) {
+        next('/')
+      } else {
+        next()
+      }
+    }
   },
   { 
     path: '/taskf',
@@ -23,6 +41,18 @@ const routes = [
     path: '/login',
     component: () => import('../pages/Login.vue'),
     meta: { title: 'Login' }
+  },
+  { 
+    path: '/user',
+    component: () => import('../pages/UserData.vue'),
+    meta: { title: 'User Data' },
+    beforeEnter: (to, from, next) => {
+      if (!isUserLogged()) {
+        next('/login')
+      } else {
+        next()
+      }
+    }
   },
   { 
     path: '/contact',

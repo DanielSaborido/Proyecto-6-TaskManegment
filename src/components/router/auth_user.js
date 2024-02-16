@@ -1,17 +1,17 @@
-const autentication = (to, from, next) => {
-  return new Promise(resolve => {
-    const userLogued = localStorage.getItem('userId') || null
-    const trialStarted = localStorage.getItem('trialStarted') || false
-    const trialEndDate = localStorage.getItem('trialEndDate')
-    const date = new Date()
-    userLogued ?
-      next('/tasks')
-      : trialStarted ? 
-        (date > trialEndDate ? 
-          next() 
-          : next('/tasks')) 
-        : next()
-  })
+export function isAuthenticated() {
+  const userLogued = localStorage.getItem('userId') || null
+  const trialStarted = localStorage.getItem('trialStarted') || false
+  const trialEndDate = localStorage.getItem('trialEndDate')
+  const date = new Date()
+  if (userLogued) {
+    return true
+  } else if (trialStarted && trialEndDate && trialEndDate > date) {
+    return true
+  }
+  return false
 }
 
-export default autentication
+export function isUserLogged() {
+  const userLogued = localStorage.getItem('userId') || null
+  return userLogued
+}
