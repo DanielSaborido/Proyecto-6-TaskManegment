@@ -106,6 +106,8 @@
         if (this.validateEmail && this.password) {
           let user = this.users.find(user => user.email === this.email)
           if (user) {
+            localStorage.removeItem('trialStarted')
+            localStorage.removeItem('trialEndDate')
             localStorage.setItem('userId', user.id)
             this.$router.push('/tasks')
           } else {

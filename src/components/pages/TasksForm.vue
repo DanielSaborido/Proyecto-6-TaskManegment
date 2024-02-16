@@ -81,68 +81,35 @@
     methods:{
       createCategory(index) {
         if (index === this.categoriesCreated.length - 1) {
-          const currentCategory = this.categoriesCreated[index].category.trim()
+          const currentCategory = this.categoriesCreated[index].category.trim();
           if (currentCategory !== '') {
-            this.categoriesCreated.push({ category: '' })
+            this.categoriesCreated.push({ category: '' });
           } else {
-            this.categoriesCreated.splice(index, 1)
+            this.categoriesCreated.splice(index, 1);
           }
         }
       },
       createTask(){
         if (this.title && this.description) {
-          if (this.logued) {
-            this.saveTaskToAPI()
-          } else {
-            this.saveTaskToLocalStorage()
+          let tasks = JSON.parse(localStorage.getItem('tasks')) || []
+          var f = new Date()
+          this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+          let task = {
+            id: tasks.length,
+            title: this.title,
+            description: this.description,
+            category_id: this.categorieSelected,
+            status: this.status,
+            creationDate: this.creationDate,
+            limitDate: this.limitDate,
+            priority: this.priority
           }
+          tasks.push(task)
+          localStorage.setItem('tasks', JSON.stringify(tasks))   
+          this.$router.push('/tasks')
         } else {
           this.showErrorMessage = true
         }
-      },
-      async saveTaskToAPI() {
-        try {
-          const response = await fetch('http://api-proyecto-6.test/api/tasks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              title: this.title,
-              description: this.description,
-              category_id: this.categorieSelected,
-              status: this.status,
-              limit_date: this.limitDate,
-              priority: this.priority,
-            }),
-          })
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const data = await response.json()
-          console.log(data)
-          this.$router.push('/tasks')
-        } catch (error) {
-          console.error(error)
-        }
-      },
-      saveTaskToLocalStorage() {
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        var f = new Date()
-        this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-        let task = {
-          id: tasks.length,
-          title: this.title,
-          description: this.description,
-          category_id: this.categorieSelected,
-          status: this.status,
-          creationDate: this.creationDate,
-          limitDate: this.limitDate,
-          priority: this.priority,
-        }
-        tasks.push(task);
-        localStorage.setItem('tasks', JSON.stringify(tasks))
-        this.$router.push('/tasks')
       },
       hideMessage() {
         this.showErrorMessage = false
