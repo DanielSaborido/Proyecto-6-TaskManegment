@@ -1,13 +1,12 @@
 body {
-    background: var(--background-color);
-    color: var(--text-color);
-    margin: 30px;
-    display: flex;
-  }
+  background: var(--background-color);
+  color: var(--text-color);
+  margin: 30px;
+  display: flex;
+}
 
 #app {
   width: 100%;
-  
 }
 
 .router {
@@ -39,4 +38,26 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media screen and (max-width: 800px) {
+  body {
+    margin: 20px;
+  }
+
+  button {
+    padding: 0.4em 1em;
+    font-size: 0.9em;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    margin: 10px;
+  }
+
+  button {
+    padding: 0.2em 0.8em;
+    font-size: 0.8em;
+  }
 }

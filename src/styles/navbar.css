@@ -1,32 +1,52 @@
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 95px;
-    margin-bottom: 2.5%;
-  }
-  
-  .icon {
-    height: 100%;
-    cursor: pointer;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 95px;
+  margin-bottom: 2.5%;
+}
+
+.icon {
+  height: 100%;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 250%;
+  font-family: Title;
+  color: var(--title-color);
+  text-shadow: 4px 4px 1px var(--shadow-color);
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 15%;
+}
+
+.user > .icon {
+  height: 50%;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
   .title {
-    font-size: 250%;
-    font-family: Title;
-    color: var(--title-color);
-    text-shadow: 4px 4px 1px var(--shadow-color);
+    font-size: 200%;
   }
-  
+
   .user {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 15%;
+    width: 25%;
   }
-  
-  .user > .icon {
-    height: 50%;
-    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .title {
+    font-size: 150%;
   }
+
+  .user {
+    width: 35%;
+  }
+}
