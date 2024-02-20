@@ -6,6 +6,8 @@
     --bt-background-color-hover: #2890bd;
     --title-color: #51a6da;
     --shadow-color: #242543;
+    --menu-bg-color: #ffffff;
+    --border-color: #d3d3d3;
   }
   
   [data-theme="dark"] {
@@ -16,4 +18,6 @@
     --bt-background-color-hover: #081b23;
     --title-color: #e2e2e2;
     --shadow-color: #51a6da;
+    --menu-bg-color: #3c3f58;
+    --border-color: #ffffff;
   }

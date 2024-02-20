@@ -93,7 +93,9 @@
 }
 
 .bt-complete{
-  display: flex;
-  position: sticky;
+  display: flex; 
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
   justify-content: space-around;
 }
