@@ -7,24 +7,24 @@
     </router-link>
     <h1 class="title">{{ title }}</h1>
     <section class="user">
-      <img v-if="theme === 'light'" src="../../assets/light/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
-      <img v-else src="../../assets/dark/sol-y-luna.png" alt="dark/light" class="icon" @click="changeTheme">
-      <router-link to="/contact" class="icon">
+      <img v-if="theme === 'light'" src="../../assets/light/sol-y-luna.png" alt="dark/light" class="userIcon" @click="changeTheme">
+      <img v-else src="../../assets/dark/sol-y-luna.png" alt="dark/light" class="userIcon" @click="changeTheme">
+      <router-link to="/contact" class="userIcon">
         <img v-if="theme === 'light'" src="../../assets/light/contact-icon.png" alt="Contact" class="icon">
         <img v-else src="../../assets/dark/contact-icon.png" alt="Contact" class="icon">
       </router-link>
-      <router-link v-if="!userData" to="/login" class="icon">
+      <router-link v-if="!userData" to="/login" class="userIcon">
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
       </router-link>
-      <div v-else @click="toggleMenu" class="icon">
+      <article v-else @click="toggleMenu" class="userIcon">
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
-        <div v-if="showMenu" class="menu">
+        <section v-if="showMenu" class="menu">
           <router-link to="/user">User Data</router-link>
           <button @click="logout">Logout</button>
-        </div>
-      </div>
+        </section>
+      </article>
     </section>
   </nav>
 </template>

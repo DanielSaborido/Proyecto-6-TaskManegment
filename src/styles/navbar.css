@@ -7,7 +7,7 @@ nav {
 }
 
 .icon {
-  height: 100%;
+  height: 90%;
   cursor: pointer;
 }
 
@@ -26,8 +26,8 @@ nav {
   width: 15%;
 }
 
-.user > .icon {
-  height: 50%;
+.userIcon {
+  height: 75%;
   cursor: pointer;
 }
 
@@ -39,6 +39,10 @@ nav {
   .user {
     width: 25%;
   }
+
+  .userIcon {
+    height: 50%;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -48,5 +52,9 @@ nav {
 
   .user {
     width: 35%;
+  }
+
+  .userIcon {
+    height: 50%;
   }
 }

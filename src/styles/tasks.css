@@ -8,7 +8,7 @@
   width: 20%;
   padding: 8px;
   border-radius: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 30px;
 }
 
 .tasks {
@@ -23,7 +23,7 @@
   flex-basis: calc(25% - 50px);
   padding: 15px;
   box-sizing: border-box;
-  text-align: justify;
+  text-align: left;
   color: black;
   margin: 25px;
   height: 300px;
