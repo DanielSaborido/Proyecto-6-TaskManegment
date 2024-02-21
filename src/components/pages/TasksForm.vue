@@ -75,6 +75,7 @@
           priority: false,
           showErrorMessage: false,
           logued: !!localStorage.getItem('userId'),
+          userData: localStorage.getItem('userId') || null,
         }
     },
 
@@ -89,23 +90,50 @@
           }
         }
       },
-      createTask(){
+      async createTask() {
         if (this.title && this.description) {
-          let tasks = JSON.parse(localStorage.getItem('tasks')) || []
-          var f = new Date()
-          this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-          let task = {
-            id: tasks.length,
-            title: this.title,
-            description: this.description,
-            category_id: this.categorieSelected,
-            status: this.status,
-            creationDate: this.creationDate,
-            limitDate: this.limitDate,
-            priority: this.priority
+          if (this.logued){
+            try {
+              const response = await fetch('http://api-proyecto-6.test/api/tasks', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title: this.title,
+                  user_id: parseInt(this.userData),
+                  category_id: this.categorieSelected,
+                  description: this.description,
+                  due_date: this.limitDate,
+                  status: this.status,
+                  priority: this.priority,
+                }),
+              })
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+              }
+              const data = await response.json()
+              console.log(data)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || []
+            var f = new Date()
+            this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+            let task = {
+              id: tasks.length,
+              title: this.title,
+              description: this.description,
+              category_id: this.categorieSelected,
+              status: this.status,
+              creationDate: this.creationDate,
+              limitDate: this.limitDate,
+              priority: this.priority
+            }
+            tasks.push(task)
+            localStorage.setItem('tasks', JSON.stringify(tasks))   
           }
-          tasks.push(task)
-          localStorage.setItem('tasks', JSON.stringify(tasks))   
           this.$router.push('/tasks')
         } else {
           this.showErrorMessage = true
