@@ -35,7 +35,7 @@
     </section>
   </article>
   <article v-else>
-    <h1>You don't have task to do.</h1>
+    <h2>You don't have task to do.</h2>
     <h3>Start creating tasks to do </h3>
   </article>
   <section class="bt-complete">
@@ -127,9 +127,31 @@
           return { name: 'Unknown', category_photo: null }
         }
       },
-      changePriority(id){
-        this.tasks[id].priority = !this.tasks[id].priority
-        // localStorage.setItem("tasks", JSON.stringify(this.tasks))
+      async changePriority(id){
+        if (this.logued) {
+          try {
+            const taskId = this.filteredTasks[id].id
+            const newPriority = !this.filteredTasks[id].priority
+            const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                priority: newPriority,
+              }),
+            })
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+            this.filteredTasks[id].priority = newPriority
+          } catch (error) {
+            console.error(error)
+          }
+        } else {
+          this.tasks[id].priority = !this.tasks[id].priority
+          localStorage.setItem("tasks", JSON.stringify(this.tasks))
+        }
       },
       async deleteTask(index) {
         if (confirm("Are you sure you want to delete this task?")) {
@@ -156,16 +178,45 @@
           }
         }
       },
-      updateTaskStatus(index) {
-        const task = this.filteredTasks[index]
-        if (task.status === "pending") {
-          task.status = "processing"
-        } else if (task.status === "processing") {
-          task.status = "complete"
-        } else if (task.status === "complete") {
-          task.status = "processing"
+      async updateTaskStatus(index) {
+        if (this.logued) {
+          try {
+            const taskId = this.filteredTasks[index].id
+            let newStatus = this.filteredTasks[index].status
+            if (newStatus === "pending") {
+                newStatus = "processing"
+            } else if (newStatus === "processing") {
+                newStatus = "complete"
+            } else if (newStatus === "complete") {
+                newStatus = "processing"
+            }
+            const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                status: newStatus,
+              }),
+            })
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+            this.filteredTasks[index].status = newStatus
+          } catch (error) {
+            console.error(error)
+          }
+        } else {
+          const task = this.filteredTasks[index]
+          if (task.status === "pending") {
+            task.status = "processing"
+          } else if (task.status === "processing") {
+            task.status = "complete"
+          } else if (task.status === "complete") {
+            task.status = "processing"
+          }
+          localStorage.setItem("tasks", JSON.stringify(this.tasks))
         }
-        // localStorage.setItem("tasks", JSON.stringify(this.tasks))
       },
       goToEditPage(index) {
         console.log(index)
