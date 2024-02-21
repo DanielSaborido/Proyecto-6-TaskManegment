@@ -28,8 +28,8 @@
       <p>Status: {{ task.status }}</p>
       <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click="changePriority(index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(index)">
-        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(index)">
+        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(task.id? task.id : index)">
+        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(task.id? task.id : index)">
         <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(index)">
       </section>
     </section>
@@ -54,7 +54,8 @@
         categories: ["All categories","Home","Job","Activities","Others"],
         tasks: [],
         filteredTasks: [],
-        rotationClasses: ["rotate10", "rotate75", "rotate5", "rotate25", "rotate0", "rotate-10", "rotate-75", "rotate-5", "rotate-25"],
+        rotationClasses: ["rotate75", "rotate5", "rotate25", "rotate0", "rotate-75", "rotate-5", "rotate-25"],
+        logued: !!localStorage.getItem('userId'),
         userData: null,
         categoryData: null,
         userId: localStorage.getItem('userId') || null,
@@ -128,11 +129,31 @@
       },
       changePriority(id){
         this.tasks[id].priority = !this.tasks[id].priority
+        // localStorage.setItem("tasks", JSON.stringify(this.tasks))
       },
-      deleteTask(index) {
+      async deleteTask(index) {
         if (confirm("Are you sure you want to delete this task?")) {
-          this.tasks.splice(index, 1)
-          localStorage.setItem("tasks", JSON.stringify(this.tasks))
+          if (this.logued){
+            try {
+              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${index}`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+              }
+              const data = await response.json()
+              console.log(data)
+              this.tasks = this.tasks.filter(task => task.id !== index)
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            this.tasks.splice(index, 1)
+            localStorage.setItem("tasks", JSON.stringify(this.tasks))
+          }
         }
       },
       updateTaskStatus(index) {
@@ -144,7 +165,7 @@
         } else if (task.status === "complete") {
           task.status = "processing"
         }
-        localStorage.setItem("tasks", JSON.stringify(this.tasks))
+        // localStorage.setItem("tasks", JSON.stringify(this.tasks))
       },
       goToEditPage(index) {
         console.log(index)
