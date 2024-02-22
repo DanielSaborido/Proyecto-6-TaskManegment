@@ -18,7 +18,7 @@
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
-    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }">
+    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }" @click="showTaskDetails(task)">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
       <p>Category: 
@@ -31,6 +31,26 @@
         <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(task.id? task.id : index)">
         <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(task.id? task.id : index)">
         <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(index)">
+      </section>
+    </article>
+    <div v-if="taskSelected" class="overlay" @click="hideTaskDetails"></div>
+    <article v-if="taskSelected" class="task task-details-container">
+      <h3>{{ taskSelected.title }}</h3>
+      <p>{{ taskSelected.description }}</p>
+      <p>Category: 
+        <img v-if="getCategory(taskSelected.category_id).category_photo" :src="getCategory(taskSelected.category_id).category_photo" :alt="getCategory(taskSelected.category_id).name">
+        <span v-else>{{ getCategory(taskSelected.category_id).name }}</span>
+      </p>
+      <p>Status: {{ taskSelected.status }}</p>
+      <p>creation_date: {{ taskSelected.creation_date }}</p>
+      <p>update_date: {{ taskSelected.update_date }}</p>
+      <p>due_date: {{ taskSelected.due_date }}</p>
+      <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining(taskSelected.due_date) }}</p>
+      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(index)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
+      <section class="fastAjust">
+        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
+        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)">
+        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)">
       </section>
     </article>
   </section>
@@ -54,6 +74,7 @@
         categories: ["All categories","Home","Job","Activities","Others"],
         tasks: [],
         filteredTasks: [],
+        taskSelected: null,
         rotationClasses: ["rotate75", "rotate5", "rotate25", "rotate0", "rotate-75", "rotate-5", "rotate-25"],
         logued: !!localStorage.getItem('userId'),
         userData: null,
@@ -122,6 +143,22 @@
         } else {
           return { name: 'Unknown', category_photo: null }
         }
+      },
+      showTaskDetails(task) {
+        this.taskSelected = task
+      },
+      hideTaskDetails() {
+        this.taskSelected = null
+      },
+      timeRemaining(dueDate) {
+        const now = new Date().getTime()
+        const dueDateTime = new Date(dueDate).getTime()
+        const difference = dueDateTime - now
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000)
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`
       },
       async changePriority(id){
         if (this.logued) {
