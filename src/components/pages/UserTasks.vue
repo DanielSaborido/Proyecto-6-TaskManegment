@@ -221,16 +221,67 @@
       goToEditPage(index) {
         console.log(index)
       },
-      completeAllTasks() {
-        this.filteredTasks.forEach(task => {
-          task.status = 'complete'
-        })
-        localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      async completeAllTasks() {
+        if (this.logued) {
+          try {
+            for (let task of this.filteredTasks) {
+              const taskId = task.id
+              let newStatus = task.status
+              newStatus = "complete"
+              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  status: newStatus,
+                }),
+              })
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+              }
+              task.status = newStatus
+            }
+          } catch (error) {
+            console.error(error)
+          }  
+        } else {
+          this.filteredTasks.forEach(task => {
+            task.status = 'complete'
+          })
+          localStorage.setItem('tasks', JSON.stringify(this.tasks))
+        }
       },
-      deleteCompletedTasks() {
-        this.filteredTasks = this.filteredTasks.filter(task => task.status !== 'complete')
-        this.tasks = this.tasks.filter(task => task.status !== 'complete')
-        localStorage.setItem('tasks', JSON.stringify(this.tasks))
+      async deleteCompletedTasks() {
+        if (this.logued) {
+          try {
+            for (let task of this.filteredTasks) {
+              let taskStatus = task.status
+              if (taskStatus == 'complete'){
+                const taskId = task.id
+                const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+                  method: 'DELETE',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const data = await response.json()
+                console.log(data)
+                this.tasks = this.tasks.filter(task => task.id !== taskId)
+              }
+              
+            }
+          } catch (error) {
+            console.error(error)
+          }  
+        } else {
+          this.filteredTasks = this.filteredTasks.filter(task => task.status !== 'complete')
+          this.tasks = this.tasks.filter(task => task.status !== 'complete')
+          localStorage.setItem('tasks', JSON.stringify(this.tasks))
+        }
       },
       async fetchDataFromAPI() {
         try {

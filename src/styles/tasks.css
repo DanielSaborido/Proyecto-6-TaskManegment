@@ -51,7 +51,7 @@
 
 .priority {
   position: absolute;
-  top: -15px;
+  top: -10px;
   right: 5px;
   border: 2px solid black;
   border-radius: 25px;
@@ -67,7 +67,10 @@
 .fastAjust{
   display: flex;
   flex-wrap: wrap;
-  height: 17.5%;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  height: 15%;
   justify-content: space-between;
 }
 .delete{
