@@ -62,6 +62,12 @@
 
 <script>
   export default {
+    props: {
+        id: {
+            type: Number,
+            required: false
+        }
+    },
     data() {
         return{
           title: null,
@@ -143,6 +149,16 @@
         this.showErrorMessage = false
         this.showSucceedMessage = false
       },
+      obtainTaskID() {
+        if (this.id){
+          console.log(this.id)
+        } else {
+          console.log('fallo')
+        }
+      }
     },
+    mounted() {
+      this.obtainTaskID()
+    }
   } 
 </script>

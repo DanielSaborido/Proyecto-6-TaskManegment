@@ -219,7 +219,7 @@
         }
       },
       goToEditPage(index) {
-        console.log(index)
+        this.$router.push(`/taskf/${index}`)
       },
       async completeAllTasks() {
         if (this.logued) {
