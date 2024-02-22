@@ -19,11 +19,16 @@ input {
   width: 100%;
 }
 
-.checkbox {
+.remember{
+  margin-bottom: 12px;
+  align-self: flex-start;
+}
+
+.radio {
   width: 20%;
 }
 
-form > .priority {
+.checkPriority {
   width: 5%;
 }
 

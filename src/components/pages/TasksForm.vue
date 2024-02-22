@@ -17,7 +17,7 @@
     <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
     <section class="categories">
       <section class="container category" v-for="(category,index) in categories">
-        <input type="radio" class="checkbox" 
+        <input type="radio" class="radio" 
           v-bind:id = index+1
           name = "category"
           v-bind:value="index+1"
@@ -28,7 +28,7 @@
     </section>
     <section class="categories" v-if="logued">
       <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
-        <input type="radio" class="checkbox" v-bind:value="index+5" v-model="categorieSelected">
+        <input type="radio" class="radio" v-bind:value="index+5" v-model="categorieSelected">
         <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
       </section>
     </section>
@@ -41,7 +41,7 @@
     <label for="limitDate">Limit Date:</label>
     <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
     <section class="container">
-      <input type="checkbox" class="priority" 
+      <input type="checkbox" class="checkPriority" 
         id = "priority"
         name = "priority"
         v-model=priority

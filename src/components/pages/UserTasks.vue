@@ -17,8 +17,8 @@
       <option v-for="(categoryData,index) in categories" v-bind:value=index>{{categoryData}}</option>
     </select>
   </section>
-  <article v-if="filteredTasks.length > 0" class="tasks">
-    <section v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }">
+  <section v-if="filteredTasks.length > 0" class="tasks">
+    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
       <p>Category: 
@@ -32,12 +32,12 @@
         <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(task.id? task.id : index)">
         <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(index)">
       </section>
-    </section>
-  </article>
-  <article v-else>
+    </article>
+  </section>
+  <section v-else>
     <h2>You don't have task to do.</h2>
     <h3>Start creating tasks to do </h3>
-  </article>
+  </section>
   <section class="bt-complete">
     <button @click="completeAllTasks">Marck all tasks as complete</button>
     <button @click="deleteCompletedTasks">Delete all complete tasks</button>
