@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createTask">
+  <form @submit.prevent="submitForm">
     <label htmlFor="title">Title Task:</label>
     <input
       type="text"
@@ -48,7 +48,7 @@
       />
       <label htmlFor="priority">Task priority</label>
     </section>
-    <button type="submit">Create Task</button>
+    <button type="submit">{{ id? 'Save changes':'Create Task' }}</button>
   </form>
   <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
@@ -63,29 +63,37 @@
 <script>
   export default {
     props: {
-        id: {
-            type: Number,
-            required: false
-        }
+      id: {
+        type: Number,
+        required: false
+      }
     },
     data() {
-        return{
-          title: null,
-          description: null,
-          categories: ["Home","Job","Activities","Others"],
-          categoriesCreated: [{ category: '' }],
-          categorieSelected: 0,
-          status: "pending",
-          creationDate: null,
-          limitDate: null,
-          priority: false,
-          showErrorMessage: false,
-          logued: !!localStorage.getItem('userId'),
-          userData: localStorage.getItem('userId') || null,
-        }
+      return{
+        title: null,
+        description: null,
+        categories: ["Home","Job","Activities","Others"],
+        categoriesCreated: [{ category: '' }],
+        categorieSelected: 0,
+        status: "pending",
+        creationDate: null,
+        limitDate: null,
+        priority: false,
+        showErrorMessage: false,
+        logued: !!localStorage.getItem('userId'),
+        userId: localStorage.getItem('userId') || null,
+        userTasks: null,
+      }
     },
 
     methods:{
+      submitForm() {
+        if (this.id) {
+          this.updateTask()
+        } else {
+          this.createTask()
+        }
+      },
       createCategory(index) {
         if (index === this.categoriesCreated.length - 1) {
           const currentCategory = this.categoriesCreated[index].category.trim();
@@ -107,7 +115,7 @@
                 },
                 body: JSON.stringify({
                   title: this.title,
-                  user_id: parseInt(this.userData),
+                  user_id: parseInt(this.userId),
                   category_id: this.categorieSelected,
                   description: this.description,
                   due_date: this.limitDate,
@@ -145,20 +153,83 @@
           this.showErrorMessage = true
         }
       },
+      async updateTask(){
+        if (this.title && this.description) {
+          if (this.logued){
+            try {
+              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${this.id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title: this.title,
+                  category_id: this.categorieSelected,
+                  description: this.description,
+                  due_date: this.limitDate,
+                  status: this.status,
+                  priority: this.priority,
+                }),
+              })
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+              }
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || []
+            var f = new Date()
+            this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+            let task = {
+              title: this.title,
+              description: this.description,
+              category_id: this.categorieSelected,
+              status: this.status,
+              creationDate: this.creationDate,
+              limitDate: this.limitDate,
+              priority: this.priority
+            }
+            tasks.push(task)
+            localStorage.setItem('tasks', JSON.stringify(tasks))   
+          }
+          this.$router.push('/tasks')
+        } else {
+          this.showErrorMessage = true
+        }
+      },
       hideMessage() {
         this.showErrorMessage = false
         this.showSucceedMessage = false
       },
-      obtainTaskID() {
-        if (this.id){
-          console.log(this.id)
+      async fetchDataFromAPI() {
+        try {
+          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
+          const userData = await response.json()
+          this.userTasks = userData.data.tasks
+        } catch (error) {
+          console.error(error)
+          return []
+        }
+      },
+    },
+    created: async function() {
+      if (this.userId && this.id) {
+        await this.fetchDataFromAPI()
+        console.log(this.userTasks)
+        console.log(this.userTasks.find((task) => task.id == this.id))
+        let foundTask = this.userTasks.find((task) => task.id == this.id)
+        if (foundTask) {
+            this.title = foundTask.title
+            this.description = foundTask.description
+            this.categorieSelected = foundTask.category_id
+            this.status = foundTask.status
+            this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0]
+            this.priority = foundTask.priority === 1
         } else {
-          console.log('fallo')
+          this.$router.push('/:pathMach(.*)*')
         }
       }
-    },
-    mounted() {
-      this.obtainTaskID()
     }
   } 
 </script>

@@ -35,7 +35,6 @@ const routes = [
   { 
     path: '/taskf/:id',
     props: (router) => {
-      console.log(router)
       const id = Number(router.params.id)
       return  {
         id:id,

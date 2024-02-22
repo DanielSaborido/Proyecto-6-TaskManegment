@@ -79,10 +79,6 @@
       },
     },
     methods: {
-      async getUserData(id){
-        const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
-        this.userData = await response.json()
-      },
       async getCategories(){
         const response = await fetch(`http://api-proyecto-6.test/api/categories`)
         this.categoryData = await response.json()
@@ -295,7 +291,7 @@
         }
       },
     },
-    mounted: async function() {
+    created: async function() {
       await this.getCategories()
       let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
       let apiTasks = []
