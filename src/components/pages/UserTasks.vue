@@ -45,7 +45,7 @@
       <p>creation_date: {{ taskSelected.creation_date }}</p>
       <p>update_date: {{ taskSelected.update_date }}</p>
       <p>due_date: {{ taskSelected.due_date }}</p>
-      <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining(taskSelected.due_date) }}</p>
+      <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
         <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
@@ -80,6 +80,8 @@
         userData: null,
         categoryData: null,
         userId: localStorage.getItem('userId') || null,
+        timeRemaining: null,
+        intervalId: null,
       }
     },
     watch: {
@@ -97,6 +99,23 @@
       },
       category() {
         this.filterTasks()
+      },
+      taskSelected: {
+        handler(newValue) {
+          if (newValue && newValue.due_date) {
+            if (this.intervalId) {
+              clearInterval(this.intervalId)
+            }
+            this.updateTimeRemaining(newValue.due_date)
+            this.intervalId = setInterval(() => {
+              this.updateTimeRemaining(newValue.due_date)
+            }, 1000)
+          } else if (this.intervalId) {
+            clearInterval(this.intervalId)
+            this.timeRemaining = null
+          }
+        },
+        immediate: true,
       },
     },
     methods: {
@@ -150,15 +169,15 @@
       hideTaskDetails() {
         this.taskSelected = null
       },
-      timeRemaining(dueDate) {
-        const now = new Date().getTime()
-        const dueDateTime = new Date(dueDate).getTime()
-        const difference = dueDateTime - now
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000)
-        return `${days}d ${hours}h ${minutes}m ${seconds}s`
+      updateTimeRemaining(dueDate) {
+        const now = new Date().getTime();
+        const dueDateTime = new Date(dueDate).getTime();
+        const difference = dueDateTime - now;
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        this.timeRemaining = `${days}d ${hours}h ${minutes}m ${seconds}s`;
       },
       async changePriority(id){
         if (this.logued) {
