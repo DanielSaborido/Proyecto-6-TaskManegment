@@ -44,7 +44,7 @@
       <p>Status: {{ taskSelected.status }}</p>
       <p>creation_date: {{ taskSelected.creation_date }}</p>
       <p>update_date: {{ taskSelected.update_date }}</p>
-      <p>due_date: {{ taskSelected.due_date }}</p>
+      <p v-if="taskSelected.due_date">due_date: {{ taskSelected.due_date }}</p>
       <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">

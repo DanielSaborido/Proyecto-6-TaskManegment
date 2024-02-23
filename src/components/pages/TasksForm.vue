@@ -40,6 +40,8 @@
     </select>
     <label for="limitDate">Limit Date:</label>
     <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
+    <label for="limitTime">Limit Time:</label>
+    <input type="time" id="limitTime" name="limitTime" v-model=limitTime>
     <section class="container">
       <input type="checkbox" class="checkPriority" 
         id = "priority"
@@ -78,6 +80,7 @@
         status: "pending",
         creationDate: null,
         limitDate: null,
+        limitTime:null,
         priority: false,
         showErrorMessage: false,
         logued: !!localStorage.getItem('userId'),

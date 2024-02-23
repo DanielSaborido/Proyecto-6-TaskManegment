@@ -38,6 +38,9 @@
 
 .task-details-container {
   position: fixed;
+  font-size: 150%;
+  height: 60%;
+  width: 65%;
   top: 50%;
   left: 50%;
   color: black;
