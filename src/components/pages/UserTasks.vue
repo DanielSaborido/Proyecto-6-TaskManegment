@@ -42,9 +42,9 @@
         <span v-else>{{ getCategory(taskSelected.category_id).name }}</span>
       </p>
       <p>Status: {{ taskSelected.status }}</p>
-      <p>creation_date: {{ taskSelected.creation_date }}</p>
-      <p>update_date: {{ taskSelected.update_date }}</p>
-      <p v-if="taskSelected.due_date">due_date: {{ taskSelected.due_date }}</p>
+      <p>creation_date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
+      <p>update_date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
+      <p v-if="taskSelected.due_date">due_date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
       <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
