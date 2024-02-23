@@ -18,7 +18,7 @@
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
-    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true }" @click="showTaskDetails(task)">
+    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true, zoom: true }" @click="showTaskDetails(task)">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
       <p>Category: 
@@ -26,11 +26,11 @@
         <span v-else>{{ getCategory(task.category_id).name }}</span>
       </p>
       <p>Status: {{ task.status }}</p>
-      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click="changePriority(index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
+      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(task.id? task.id : index)">
-        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(task.id? task.id : index)">
-        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(index)">
+        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)">
+        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)">
+        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)">
       </section>
     </article>
     <div v-if="taskSelected" class="overlay" @click="hideTaskDetails"></div>
@@ -46,7 +46,7 @@
       <p>update_date: {{ taskSelected.update_date }}</p>
       <p>due_date: {{ taskSelected.due_date }}</p>
       <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining(taskSelected.due_date) }}</p>
-      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(index)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
+      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
         <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
         <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)">
@@ -163,8 +163,9 @@
       async changePriority(id){
         if (this.logued) {
           try {
-            const taskId = this.filteredTasks[id].id
-            const newPriority = !this.filteredTasks[id].priority
+            const task = this.filteredTasks.find(task => task.id === id)
+            const taskId = task.id
+            const newPriority = !task.priority
             const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
               method: 'PUT',
               headers: {
@@ -177,7 +178,7 @@
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`)
             }
-            this.filteredTasks[id].priority = newPriority
+            task.priority = newPriority
           } catch (error) {
             console.error(error)
           }
@@ -209,13 +210,15 @@
             this.tasks.splice(index, 1)
             localStorage.setItem("tasks", JSON.stringify(this.tasks))
           }
+          this.hideTaskDetails()
         }
       },
       async updateTaskStatus(index) {
         if (this.logued) {
           try {
-            const taskId = this.filteredTasks[index].id
-            let newStatus = this.filteredTasks[index].status
+            const task = this.filteredTasks.find(task => task.id === index)
+            const taskId = task.id
+            let newStatus = task.status
             if (newStatus === "pending") {
                 newStatus = "processing"
             } else if (newStatus === "processing") {
@@ -235,7 +238,7 @@
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`)
             }
-            this.filteredTasks[index].status = newStatus
+            task.status = newStatus
           } catch (error) {
             console.error(error)
           }

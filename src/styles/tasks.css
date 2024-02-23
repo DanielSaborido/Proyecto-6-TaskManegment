@@ -32,6 +32,10 @@
   box-shadow:10px 10px 30px rgba(0, 0, 0, 0.8);
 }
 
+.zoom:hover {
+ transform: scale(1.1);
+}
+
 .task-details-container {
   position: fixed;
   top: 50%;
