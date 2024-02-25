@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import router from "./components/router/router.js"
+import store from './components/stores/store.js'
 //import './style.css'
 import './styles/common.css';
 import './styles/fonts.css';
@@ -19,4 +20,4 @@ const theme = localTheme !== null ? localTheme : (window.matchMedia('(prefers-co
 localStorage.setItem('theme', theme)
 document.documentElement.setAttribute('data-theme', theme)
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(store).use(router).mount('#app')
