@@ -13,8 +13,9 @@
       <option value="status">Status</option>
       <option value="date">Date</option>
     </select>
-    <select v-model=category v-if=(categories.length) class="filter">
-      <option v-for="(categoryData,index) in categories" v-bind:value=index>{{categoryData}}</option>
+    <select v-model=category v-if="categories.length" class="filter">
+      <option v-for="(categoryData, index) in categories" v-bind:value="index">{{ categoryData }}</option>
+      <option v-for="(userCategory, index) in userCategories" v-bind:value="index + 5">{{ userCategory.name }}</option>
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
@@ -72,6 +73,7 @@
         order: "default",
         category: 0,
         categories: ["All categories","Home","Job","Activities","Others"],
+        userCategories: [],
         tasks: [],
         filteredTasks: [],
         taskSelected: null,
@@ -130,7 +132,7 @@
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-                (this.category === 0 || task.categories === this.category || task.category_id === this.category)
+                (this.category === 0 || (this.category < 5 ? task.categories === this.category : task.category_id === this.category))
         })
         this.sortTasks()
       },
@@ -342,6 +344,7 @@
         try {
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
+          this.userCategories = userData.data.categories
           const apiTasks = userData.data.tasks
           return apiTasks
         } catch (error) {

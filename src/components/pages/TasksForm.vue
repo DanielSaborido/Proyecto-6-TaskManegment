@@ -27,8 +27,12 @@
       </section>
     </section>
     <section class="categories" v-if="logued">
-      <section class="container category" v-for="(opcion, index) in categoriesCreated" :key="index">
-        <input type="radio" class="radio" v-bind:value="index+5" v-model="categorieSelected">
+      <section class="container category" v-for="(category, index) in userCategories" :key="index">
+        <input type="radio" class="radio" v-bind:value="category.id" v-model="categorieSelected">
+        <label v-bind:htmlFor="category.id">{{ category.name }}</label>
+      </section>
+      <section class="container category" v-for="(option, index) in categoriesCreated" :key="index">
+        <input type="radio" class="radio" v-bind:value="index + 5" v-model="categorieSelected">
         <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
       </section>
     </section>
@@ -86,6 +90,7 @@
         logued: !!localStorage.getItem('userId'),
         userId: localStorage.getItem('userId') || null,
         userTasks: null,
+        userCategories: [],
       }
     },
 
@@ -99,19 +104,38 @@
       },
       createCategory(index) {
         if (index === this.categoriesCreated.length - 1) {
-          const currentCategory = this.categoriesCreated[index].category.trim();
+          const currentCategory = this.categoriesCreated[index].category.trim()
           if (currentCategory !== '') {
-            this.categoriesCreated.push({ category: '' });
+            this.categoriesCreated.push({ category: '' })
           } else {
-            this.categoriesCreated.splice(index, 1);
+            this.categoriesCreated.splice(index, 1)
           }
         }
       },
       async createTask() {
         if (this.title && this.description) {
-          if (this.logued){
+          if (this.logued) {
             try {
-              const response = await fetch('http://api-proyecto-6.test/api/tasks', {
+              let categoryId
+              if (this.categorieSelected >= 5) {
+                const responseCategory = await fetch('http://api-proyecto-6.test/api/categories', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name: this.categoriesCreated[this.categorieSelected - 5].category,
+                  }),
+                })
+                if (!responseCategory.ok) {
+                  throw new Error(`HTTP error! status: ${responseCategory.status}`)
+                }
+                const dataCategory = await responseCategory.json()
+                categoryId = dataCategory.data.id
+              } else {
+                categoryId = this.categorieSelected
+              }
+              const responseTask = await fetch('http://api-proyecto-6.test/api/tasks', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -119,18 +143,18 @@
                 body: JSON.stringify({
                   title: this.title,
                   user_id: parseInt(this.userId),
-                  category_id: this.categorieSelected,
+                  category_id: categoryId,
                   description: this.description,
                   due_date: this.limitDate,
                   status: this.status,
                   priority: this.priority,
                 }),
               })
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
+              if (!responseTask.ok) {
+                throw new Error(`HTTP error! status: ${responseTask.status}`)
               }
-              const data = await response.json()
-              console.log(data)
+              const dataTask = await responseTask.json()
+              console.log(dataTask)
             } catch (error) {
               console.error(error)
             }
@@ -183,7 +207,7 @@
           } else {
             let tasks = JSON.parse(localStorage.getItem('tasks')) || []
             var f = new Date()
-            this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+            this.creationDate = f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
             let task = {
               title: this.title,
               description: this.description,
@@ -205,8 +229,21 @@
         this.showErrorMessage = false
         this.showSucceedMessage = false
       },
+      async fetchUserCategories() {
+        try {
+          const response = await fetch(`http://api-proyecto-6.test/api/categories`)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const data = await response.json()
+          this.userCategories = data.data
+        } catch (error) {
+          console.error(error)
+        }
+      },
       async fetchDataFromAPI() {
         try {
+          await this.fetchUserCategories()
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
           this.userTasks = userData.data.tasks
