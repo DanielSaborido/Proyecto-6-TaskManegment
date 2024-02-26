@@ -344,12 +344,17 @@
         try {
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
-          this.userCategories = userData.data.categories
-          const apiTasks = userData.data.tasks
-          return apiTasks
+          if (userData && userData.data) {
+            this.userCategories = userData.data.categories || [];
+            const apiTasks = userData.data.tasks || [];
+            return apiTasks;
+          } else {
+            console.error("UserData or userData.data is undefined.");
+            return [];
+          }
         } catch (error) {
-          console.error(error)
-          return []
+          console.error(error);
+          return [];
         }
       },
     },
