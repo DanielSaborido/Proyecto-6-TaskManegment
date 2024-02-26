@@ -101,17 +101,40 @@
       async getUsers(){
         this.users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
       },
-      loginAcount() {
+      async loginAcount() {
         if (this.validateEmail && this.password) {
-          let user = this.users.find(user => user.email === this.email)
-          if (user) {
-            localStorage.removeItem('trialStarted')
-            localStorage.removeItem('trialEndDate')
-            localStorage.removeItem('tasks')
-            localStorage.setItem('userId', user.id)
-            this.$router.push('/tasks')
-          } else {
-            console.log("El correo no se encontró en la base de datos.")
+          try {
+            const response = await fetch('http://api-proyecto-6.test/api/check-password', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: this.email,
+                password: this.password,
+              }),
+            })
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`)
+            }
+            const data = await response.json()
+            if (data.message === 'Password correct') {
+              let user = this.users.find(user => user.email === this.email)
+              if (user) {
+                localStorage.removeItem('trialStarted')
+                localStorage.removeItem('trialEndDate')
+                localStorage.removeItem('tasks')
+                localStorage.setItem('userId', user.id)
+                this.$router.push('/tasks')
+              } else {
+                console.log("The email was not found in the database.")
+              }
+            } else {
+              console.log("Incorrect email or password.")
+              this.showErrorMessage = true
+            }
+          } catch (error) {
+            console.error(error)
           }
         } else {
           console.log("Login failed. Please check your email and password.")

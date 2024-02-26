@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useAuthStore } from './auth-store'
+import { useAuthStore } from './authStore'
 
 export const useTaskStore = defineStore({
   id: 'task',
