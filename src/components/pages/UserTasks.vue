@@ -132,7 +132,7 @@
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-                (this.category === 0 || (this.category < 5 ? task.categories === this.category : task.category_id === this.category))
+            (this.category === 0 || task.categories === this.category || (this.category < 5 ? task.category_id === this.category : task.category_id === this.userCategories))
         })
         this.sortTasks()
       },

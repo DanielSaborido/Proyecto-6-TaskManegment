@@ -112,43 +112,52 @@
           }
         }
       },
+      async createCustomCategory(categoryName) {
+        try {
+          const response = await fetch('http://api-proyecto-6.test/api/categories', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: categoryName,
+            }),
+          })
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const data = await response.json()
+          return data.data.id
+        } catch (error) {
+          console.error(error)
+          return null
+        }
+      },
       async createTask() {
         if (this.title && this.description) {
           if (this.logued) {
             try {
-              let categoryId
+              let categoryId = this.categorieSelected
               if (this.categorieSelected >= 5) {
-                const responseCategory = await fetch('http://api-proyecto-6.test/api/categories', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    name: this.categoriesCreated[this.categorieSelected - 5].category,
-                  }),
-                })
-                if (!responseCategory.ok) {
-                  throw new Error(`HTTP error! status: ${responseCategory.status}`)
+                categoryId = await this.createCustomCategory(this.categoriesCreated[this.categorieSelected - 5].category)
+                if (categoryId === null) {
+                  return
                 }
-                const dataCategory = await responseCategory.json()
-                categoryId = dataCategory.data.id
-              } else {
-                categoryId = this.categorieSelected
               }
               const responseTask = await fetch('http://api-proyecto-6.test/api/tasks', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  title: this.title,
-                  user_id: parseInt(this.userId),
-                  category_id: categoryId,
-                  description: this.description,
-                  due_date: this.limitDate,
-                  status: this.status,
-                  priority: this.priority,
-                }),
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      title: this.title,
+                      user_id: parseInt(this.userId),
+                      category_id: categoryId,
+                      description: this.description,
+                      due_date: this.limitDate,
+                      status: this.status,
+                      priority: this.priority,
+                  }),
               })
               if (!responseTask.ok) {
                 throw new Error(`HTTP error! status: ${responseTask.status}`)
@@ -184,6 +193,13 @@
         if (this.title && this.description) {
           if (this.logued){
             try {
+              let categoryId = this.categorieSelected
+              if (this.categorieSelected >= 5) {
+                categoryId = await this.createCustomCategory(this.categoriesCreated[this.categorieSelected - 5].category)
+                if (categoryId === null) {
+                  return
+                }
+              }
               const response = await fetch(`http://api-proyecto-6.test/api/tasks/${this.id}`, {
                 method: 'PUT',
                 headers: {
