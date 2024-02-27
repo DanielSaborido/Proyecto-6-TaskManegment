@@ -15,16 +15,20 @@
     </select>
     <select v-model=category v-if="categories.length" class="filter">
       <option v-for="(categoryData, index) in categories" v-bind:value="index">{{ categoryData }}</option>
-      <option v-for="(userCategory, index) in userCategories" v-bind:value="index + 5">{{ userCategory.name }}</option>
+      <option v-for="(userCategory, index) in userCategories" v-bind:value="userCategory.id">{{ userCategory.name }}</option>
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
     <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true, zoom: true }" @click="showTaskDetails(task)">
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
-      <p>Category: 
-        <img v-if="getCategory(task.category_id).category_photo" :src="getCategory(task.category_id).category_photo" :alt="getCategory(task.category_id).name">
-        <span v-else>{{ getCategory(task.category_id).name }}</span>
+      <p v-if="task.category_id">Category: 
+        <img v-if="getCategory(task.category_id, false).category_photo" :src="getCategory(task.category_id, false).category_photo" :alt="getCategory(task.category_id, false).name">
+        <span v-else>{{ getCategory(task.category_id, false).name }}</span>
+      </p>
+      <p v-if="task.user_category_id">Category: 
+        <img v-if="getCategory(task.user_category_id, true).category_photo" :src="getCategory(task.user_category_id, true).category_photo" :alt="getCategory(task.user_category_id, true).name">
+        <span v-else>{{ getCategory(task.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ task.status }}</p>
       <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
@@ -38,9 +42,13 @@
     <article v-if="taskSelected" class="task task-details-container">
       <h3>{{ taskSelected.title }}</h3>
       <p>{{ taskSelected.description }}</p>
-      <p>Category: 
-        <img v-if="getCategory(taskSelected.category_id).category_photo" :src="getCategory(taskSelected.category_id).category_photo" :alt="getCategory(taskSelected.category_id).name">
-        <span v-else>{{ getCategory(taskSelected.category_id).name }}</span>
+      <p v-if="taskSelected.category_id">Category: 
+        <img v-if="getCategory(taskSelected.category_id, false).category_photo" :src="getCategory(taskSelected.category_id, false).category_photo" :alt="getCategory(taskSelected.category_id, false).name">
+        <span v-else>{{ getCategory(taskSelected.category_id, false).name }}</span>
+      </p>
+      <p v-if="taskSelected.user_category_id">Category: 
+        <img v-if="getCategory(taskSelected.user_category_id, true).category_photo" :src="getCategory(taskSelected.user_category_id, true).category_photo" :alt="getCategory(taskSelected.user_category_id, true).name">
+        <span v-else>{{ getCategory(taskSelected.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ taskSelected.status }}</p>
       <p>creation_date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
@@ -132,7 +140,7 @@
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-            (this.category === 0 || task.categories === this.category || (this.category < 5 ? task.category_id === this.category : task.category_id === this.userCategories))
+            (this.category === 0 || task.categories === this.category || (task.category_id? task.category_id === this.category : task.user_category_id === this.userCategories.id))
         })
         this.sortTasks()
       },
@@ -157,9 +165,12 @@
           return description
         }
       },
-      getCategory(categoryId) {
-        if (this.categoryData) {
+      getCategory(categoryId, custom) {
+        if (!custom && this.categoryData) {
           const matchingCategory = this.categoryData.find(category => category.id === categoryId)
+          return matchingCategory ? matchingCategory : { name: 'Unknown', category_photo: null }
+        } else if (custom && this.userCategories){
+          const matchingCategory = this.userCategories.find(category => category.id === categoryId)
           return matchingCategory ? matchingCategory : { name: 'Unknown', category_photo: null }
         } else {
           return { name: 'Unknown', category_photo: null }
@@ -345,7 +356,7 @@
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
           if (userData && userData.data) {
-            this.userCategories = userData.data.categories || [];
+            this.userCategories = userData.data.user_categories || [];
             const apiTasks = userData.data.tasks || [];
             return apiTasks;
           } else {
