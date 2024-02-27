@@ -13,9 +13,10 @@
       <option value="status">Status</option>
       <option value="date">Date</option>
     </select>
-    <select v-model=category v-if="categories.length" class="filter">
-      <option v-for="(categoryData, index) in categories" v-bind:value="index">{{ categoryData }}</option>
-      <option v-for="(userCategory, index) in userCategories" v-bind:value="userCategory.id">{{ userCategory.name }}</option>
+    <select v-model=category v-if="categoryData.length" class="filter">
+      <option v-bind:value=0>All categories</option>
+      <option v-for="(category, index) in categoryData" v-bind:value="'category_' + category.id">{{ category.name }}</option>
+      <option v-for="(userCategory, index) in userCategories" v-bind:value="'userCategory_' + userCategory.id">{{ userCategory.name }}</option>
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
@@ -80,7 +81,6 @@
         status: "default",
         order: "default",
         category: 0,
-        categories: ["All categories","Home","Job","Activities","Others"],
         userCategories: [],
         tasks: [],
         filteredTasks: [],
@@ -140,7 +140,10 @@
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-            (this.category === 0 || task.categories === this.category || (task.category_id? task.category_id === this.category : task.user_category_id === this.userCategories.id))
+          (this.category === 0 || 
+            (this.category.startsWith('category_') && task.category_id === parseInt(this.category.slice(9))) ||
+            (this.category.startsWith('userCategory_') && task.user_category_id === parseInt(this.category.slice(13)))
+          )
         })
         this.sortTasks()
       },

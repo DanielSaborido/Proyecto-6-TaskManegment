@@ -6,6 +6,7 @@
     <p>Creation Date: {{ formatDate(userData.data.created_at) }}</p>
     <p>Update Date: {{ formatDate(userData.data.updated_at) }}</p>
     <p>Tasks created: {{ userData.data.tasks && userData.data.tasks.length }}</p>
+    <p>Categories created: {{ userData.data.user_categories && userData.data.user_categories.length }}</p>
   </div>
 </template>
 
