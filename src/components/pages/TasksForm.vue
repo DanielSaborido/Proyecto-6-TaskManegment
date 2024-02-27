@@ -287,8 +287,8 @@
         if (foundTask) {
             this.title = foundTask.title
             this.description = foundTask.description
-            this.categorieSelected = foundTask.category_id || null
-            this.customcategorieSelected = foundTask.user_category_id || null
+            this.categorieSelected = foundTask.category_id
+            this.customcategorieSelected = foundTask.user_category_id
             this.status = foundTask.status
             this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0]
             this.priority = foundTask.priority === 1
