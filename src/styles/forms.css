@@ -64,9 +64,9 @@ form > .container {
   color: rgb(255, 0, 0);
 }
 
-.categoryForm {
+.fastForm {
   position: fixed;
-  height: 45%;
+  height: 65%;
   width: 50%;
   top: 50%;
   left: 50%;

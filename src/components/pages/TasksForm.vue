@@ -63,7 +63,7 @@
     <button type="submit">{{ id? 'Save changes':'Create Task' }}</button>
   </form>
   <div v-if="showCategoryForm" class="overlay" @click="hideCategoryForm"></div>
-  <form v-if="showCategoryForm" class="categoryForm" @submit.prevent="createNewCategory">
+  <form v-if="showCategoryForm" class="fastForm" @submit.prevent="createNewCategory">
     <label for="newCategory">New Category:</label>
     <input type="text" id="newCategory" v-model="newCategoryName" required>
     <label for="newIcon">Icon of your task:</label>

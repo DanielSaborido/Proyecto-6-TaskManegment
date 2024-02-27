@@ -88,7 +88,7 @@
         rotationClasses: ["rotate75", "rotate5", "rotate25", "rotate0", "rotate-75", "rotate-5", "rotate-25"],
         logued: !!localStorage.getItem('userId'),
         userData: null,
-        categoryData: null,
+        categoryData: [],
         userId: localStorage.getItem('userId') || null,
         timeRemaining: null,
         intervalId: null,
