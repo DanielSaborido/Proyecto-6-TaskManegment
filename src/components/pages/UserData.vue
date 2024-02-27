@@ -74,7 +74,7 @@ export default {
     },
     handleFileChange(event) {
       const file = event.target.files[0]
-      this.editedUserData.profile_photo = file
+      this.profile_photo = file
     },
     async getUserData(id){
       const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
