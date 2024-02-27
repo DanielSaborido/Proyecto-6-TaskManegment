@@ -14,7 +14,11 @@
       name="description"
       v-model=description
     />
-    <label htmlFor="category">Category Task: <q v-if="!logued">Log in for create your own categories</q></label>
+    <label htmlFor="category">
+      Category Task:
+      <q v-if="!logued">Log in to create your own categories</q>
+      <q v-else @click="categoryForm">Click here for new category</q>
+    </label>
     <section class="categories">
       <section class="container category" v-for="(category,index) in categories">
         <input type="radio" class="radio" 
@@ -22,18 +26,20 @@
           name = "category"
           v-bind:value="index+1"
           v-model="categorieSelected"
+          @change="deselectCustomCategory"
         />
         <label v-bind:htmlFor=index+1>{{category}}</label>
       </section>
     </section>
     <section class="categories" v-if="logued">
       <section class="container category" v-for="(category, index) in userCategories" :key="index">
-        <input type="radio" class="radio" v-bind:value="category.id" v-model="categorieSelected">
-        <label v-bind:htmlFor="category.id">{{ category.name }}</label>
-      </section>
-      <section class="container category" v-for="(option, index) in categoriesCreated" :key="index">
-        <input type="radio" class="radio" v-bind:value="index + 5" v-model="categorieSelected">
-        <input type="text" v-model="categoriesCreated[index].category" @input="createCategory(index)" placeholder="Category" class="categoryInfo">
+        <input type="radio" class="radio" 
+          v-bind:id = "`user_${category.id}`" 
+          v-bind:value="category.id" 
+          v-model="customcategorieSelected" 
+          @change="deselectGeneralCategory"
+        />
+        <label v-bind:htmlFor="`user_${category.id}`">{{ category.name }}</label>
       </section>
     </section>
     <label htmlFor="status">Status Task:</label>
@@ -55,6 +61,14 @@
       <label htmlFor="priority">Task priority</label>
     </section>
     <button type="submit">{{ id? 'Save changes':'Create Task' }}</button>
+  </form>
+  <div v-if="showCategoryForm" class="overlay" @click="hideCategoryForm"></div>
+  <form v-if="showCategoryForm" class="categoryForm" @submit.prevent="createNewCategory">
+    <label for="newCategory">New Category:</label>
+    <input type="text" id="newCategory" v-model="newCategoryName" required>
+    <label for="newIcon">Icon of your task:</label>
+    <input type="text" id="newIcon" v-model="newCategoryIcon">
+    <button type="submit">Create</button>
   </form>
   <section class="container message error-message" v-if="showErrorMessage" >
     <p>Error: Please check your input.</p>
@@ -79,8 +93,11 @@
         title: null,
         description: null,
         categories: ["Home","Job","Activities","Others"],
-        categoriesCreated: [{ category: '' }],
-        categorieSelected: 0,
+        categorieSelected: null,
+        customcategorieSelected: null,
+        showCategoryForm: false,
+        newCategoryName: null,
+        newCategoryIcon: null,
         status: "pending",
         creationDate: null,
         limitDate: null,
@@ -95,6 +112,12 @@
     },
 
     methods:{
+      deselectCustomCategory() {
+        this.customcategorieSelected = null
+      },
+      deselectGeneralCategory() {
+        this.categorieSelected = null
+      },
       submitForm() {
         if (this.id) {
           this.updateTask()
@@ -102,62 +125,54 @@
           this.createTask()
         }
       },
-      createCategory(index) {
-        if (index === this.categoriesCreated.length - 1) {
-          const currentCategory = this.categoriesCreated[index].category.trim()
-          if (currentCategory !== '') {
-            this.categoriesCreated.push({ category: '' })
-          } else {
-            this.categoriesCreated.splice(index, 1)
-          }
-        }
+      categoryForm() {
+        this.showCategoryForm = true
       },
-      async createCustomCategory(categoryName) {
+      hideCategoryForm() {
+        this.showCategoryForm = false
+      },
+      async createNewCategory() {
         try {
-          const response = await fetch('http://api-proyecto-6.test/api/categories', {
+          const responseTask = await fetch('http://api-proyecto-6.test/api/user-categories', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              name: categoryName,
+              name: this.newCategoryName,
+              category_photo: this.newCategoryIcon,
+              user_id: parseInt(this.userId),
             }),
           })
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
+          if (!responseTask.ok) {
+            throw new Error(`HTTP error! status: ${responseTask.status}`)
           }
-          const data = await response.json()
-          return data.data.id
+          const dataTask = await responseTask.json()
+          console.log(dataTask)
         } catch (error) {
           console.error(error)
-          return null
         }
+        this.showCategoryForm = false
       },
       async createTask() {
         if (this.title && this.description) {
           if (this.logued) {
             try {
-              let categoryId = this.categorieSelected
-              if (this.categorieSelected >= 5) {
-                categoryId = await this.createCustomCategory(this.categoriesCreated[this.categorieSelected - 5].category)
-                if (categoryId === null) {
-                  return
-                }
+              const requestBody = {
+                title: this.title,
+                user_id: parseInt(this.userId),
+                [this.categorieSelected ? 'category_id' : 'user_category_id']: this.categorieSelected ? this.categorieSelected : this.customcategorieSelected,
+                description: this.description,
+                due_date: this.limitDate,
+                status: this.status,
+                priority: this.priority,
               }
               const responseTask = await fetch('http://api-proyecto-6.test/api/tasks', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify({
-                      title: this.title,
-                      user_id: parseInt(this.userId),
-                      category_id: categoryId,
-                      description: this.description,
-                      due_date: this.limitDate,
-                      status: this.status,
-                      priority: this.priority,
-                  }),
+                  body: JSON.stringify(requestBody),
               })
               if (!responseTask.ok) {
                 throw new Error(`HTTP error! status: ${responseTask.status}`)
@@ -193,13 +208,6 @@
         if (this.title && this.description) {
           if (this.logued){
             try {
-              let categoryId = this.categorieSelected
-              if (this.categorieSelected >= 5) {
-                categoryId = await this.createCustomCategory(this.categoriesCreated[this.categorieSelected - 5].category)
-                if (categoryId === null) {
-                  return
-                }
-              }
               const response = await fetch(`http://api-proyecto-6.test/api/tasks/${this.id}`, {
                 method: 'PUT',
                 headers: {
@@ -247,19 +255,18 @@
       },
       async fetchUserCategories() {
         try {
-          const response = await fetch(`http://api-proyecto-6.test/api/categories`)
+          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
           }
           const data = await response.json()
-          this.userCategories = data.data
+          this.userCategories = data.data.user_categories
         } catch (error) {
           console.error(error)
         }
       },
       async fetchDataFromAPI() {
         try {
-          await this.fetchUserCategories()
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
           this.userTasks = userData.data.tasks
@@ -270,6 +277,7 @@
       },
     },
     created: async function() {
+      await this.fetchUserCategories()
       if (this.userId && this.id) {
         await this.fetchDataFromAPI()
         console.log(this.userTasks)
