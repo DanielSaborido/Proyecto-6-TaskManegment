@@ -1,3 +1,29 @@
+table {
+  margin: 0 auto;
+  width: 75%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+td, th {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--border-color);
+}
+
+th {
+  background-color: var(--menu-bg-color);
+  color: var(--title-color);
+}
+
+tr:hover {
+  background-color: var(--background-color);
+}
+
+.category-icon {
+  height: 65px;
+  width: 65px;
+}
 
 .delete-category{
     cursor: pointer;
@@ -7,9 +33,15 @@
     cursor: pointer;
     height: 50px;
   }
-  .delete-category:hover{
-    content: url('../assets/tasksAjusts/deleteHover.png');
+  .delete-ligth:hover{
+    content: url('../assets/light/deleteHover.png');
   }
-  .edit-category:hover{
-    content: url('../assets/tasksAjusts/libroHover.png');
+  .edit-ligth:hover{
+    content: url('../assets/light/libroHover.png');
+  }
+  .delete-dark:hover{
+    content: url('../assets/dark/deleteHover.png');
+  }
+  .edit-dark:hover{
+    content: url('../assets/dark/libroHover.png');
   }

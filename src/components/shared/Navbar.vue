@@ -52,7 +52,7 @@
     },
     created() {
       this.loadTheme()
-      this.checkUser();
+      this.checkUser()
     },
     methods: {
       checkUser() {

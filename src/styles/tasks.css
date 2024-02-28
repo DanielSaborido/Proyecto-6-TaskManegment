@@ -117,10 +117,10 @@
   height: 100%;
 }
 .delete:hover{
-  content: url('../assets/tasksAjusts/deleteHover.png');
+  content: url('../assets/light/deleteHover.png');
 }
 .edit:hover{
-  content: url('../assets/tasksAjusts/libroHover.png');
+  content: url('../assets/light/libroHover.png');
 }
 .update:hover{
   transform: rotate(180deg);

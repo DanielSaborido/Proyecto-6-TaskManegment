@@ -28,15 +28,15 @@
         <span v-else>{{ getCategory(task.category_id, false).name }}</span>
       </p>
       <p v-if="task.user_category_id">Category: 
-        <img v-if="getCategory(task.user_category_id, true).category_photo" :src="getCategory(task.user_category_id, true).category_photo" :alt="getCategory(task.user_category_id, true).name">
+        <img v-if="getCategory(task.user_category_id, true).category_photo" :src="getCategory(task.user_category_id, true).category_photo" :alt="getCategory(task.user_category_id, true).name" class="category-icon">
         <span v-else>{{ getCategory(task.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ task.status }}</p>
       <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)">
-        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)">
-        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)">
+        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)">
+        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)">
+        <img class="update" src="../../assets/light/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)">
       </section>
     </article>
     <div v-if="taskSelected" class="overlay" @click="hideTaskDetails"></div>
@@ -58,9 +58,9 @@
       <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/tasksAjusts/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
-        <img class="edit" src="../../assets/tasksAjusts/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)">
-        <img class="update" src="../../assets/tasksAjusts/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)">
+        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
+        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)">
+        <img class="update" src="../../assets/light/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)">
       </section>
     </article>
   </section>

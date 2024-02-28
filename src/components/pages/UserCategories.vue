@@ -14,11 +14,17 @@
       <tr v-for="(category, index) in userCategories" :key="category.id">
         <td>{{ index + 1 }}</td>
         <td>
-          <img :src="category.category_photo" alt="Category Photo" style="max-width: 50px; max-height: 50px;">
+          <img :src="category.category_photo" alt="Category Photo" class="category-icon">
         </td>
         <td>{{ category.name }}</td>
-        <td @click="categoryForm(category)"><img class="edit-category" src="../../assets/tasksAjusts/libro.png" alt="edit"></td>
-        <td @click="deleteCategory(category.id)"><img class="delete-category" src="../../assets/tasksAjusts/delete.png" alt="delete"></td>
+        <td @click="categoryForm(category)">
+          <img v-if="theme === 'light'" src="../../assets/light/libro.png" class="edit-category edit-light" alt="edit">
+          <img v-else src="../../assets/dark/libro.png" class="edit-category edit-dark" alt="edit">
+        </td>
+        <td @click="deleteCategory(category.id)">
+          <img v-if="theme === 'light'" src="../../assets/light/delete.png" class="delete-category delete-light" alt="delete">
+          <img v-else src="../../assets/dark/delete.png" class="delete-category delete-dark" alt="delete">
+        </td>
       </tr>
     </tbody>
   </table>
@@ -36,6 +42,7 @@
 export default{
   data(){
     return {
+      theme: "",
       userCategories: [],
       showCategoryForm: false,
       newCategoryName: null,
@@ -43,6 +50,9 @@ export default{
       editingCategory: null,
       userId: localStorage.getItem('userId'),
     }
+  },
+  mounted() {
+    this.theme = localStorage.getItem('theme')
   },
   methods: {
     categoryForm(category) {
@@ -57,9 +67,7 @@ export default{
     async getUserCategories(id){
       const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
       const userData = await response.json()
-      console.log(userData)
       this.userCategories = userData.data.user_categories
-      console.log(this.userCategories)
     },
     handleFileChange(event) {
       const file = new FileReader()
