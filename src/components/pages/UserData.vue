@@ -1,6 +1,6 @@
 <template>
   <div v-if="userData">
-    <img :src="userData.data.profile_photo" alt="profile_photo" v-if="userData.data.profile_photo">
+    <img :src="'http://api-proyecto-6.test/storage/' + userData.data.profile_photo" alt="profile_photo" v-if="userData.data.profile_photo">
     <h2>{{ userData.data.name }}</h2>
     <p>Email: {{ userData.data.email }}</p>
     <p>Creation Date: {{ formatDate(userData.data.created_at) }}</p>
@@ -20,7 +20,7 @@
     <label for="password">New Password:</label>
     <input v-model="password" type="password" id="password">
     <label for="profile_photo">Profile Photo:</label>
-    <input type="file" id="profile_photo" @change="handleFileChange">
+    <input type="file" accept="imge/png, image/jpg, image/jpeg, image/gift" @change="handleFileChange">
     <button type="submit">Edit user</button>
   </form>
 </template>
@@ -73,8 +73,12 @@ export default {
       }
     },
     handleFileChange(event) {
-      const file = event.target.files[0]
-      this.profile_photo = file
+      const file = new FileReader()
+      file.readAsDataURL(event.target.files[0])
+      file.onload = () => {
+        this.profile_photo = file.result
+        console.log(this.profile_photo)
+      }
     },
     async getUserData(id){
       const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
