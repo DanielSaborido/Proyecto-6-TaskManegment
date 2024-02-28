@@ -1,4 +1,5 @@
 <template>
+  <button @click="categoryForm(null)">Create New Category</button>
   <table>
     <thead>
       <tr>
@@ -16,11 +17,19 @@
           <img :src="category.category_photo" alt="Category Photo" style="max-width: 50px; max-height: 50px;">
         </td>
         <td>{{ category.name }}</td>
-        <td @click="editCategory(category)"><img class="edit-category" src="../../assets/tasksAjusts/libro.png" alt="edit"></td>
+        <td @click="categoryForm(category)"><img class="edit-category" src="../../assets/tasksAjusts/libro.png" alt="edit"></td>
         <td @click="deleteCategory(category.id)"><img class="delete-category" src="../../assets/tasksAjusts/delete.png" alt="delete"></td>
       </tr>
     </tbody>
   </table>
+  <div v-if="showCategoryForm" class="overlay" @click="hideCategoryForm"></div>
+  <form v-if="showCategoryForm" class="fastForm" @submit.prevent="editingCategory ? editCategory() : createNewCategory()">
+    <label for="newCategory">{{ editingCategory ? 'Edit' : 'New' }} Category:</label>
+    <input type="text" id="newCategory" v-model="newCategoryName" required>
+    <label for="category_photo">Category Photo:</label>
+    <input type="file" accept="image/png, image/jpg, image/jpeg, image/gif" @change="handleFileChange">
+    <button type="submit">{{ editingCategory ? 'Update' : 'Create' }}</button>
+  </form>
 </template>
 
 <script>
@@ -28,15 +37,109 @@ export default{
   data(){
     return {
       userCategories: [],
+      showCategoryForm: false,
+      newCategoryName: null,
+      newCategoryIcon: null,
+      editingCategory: null,
+      userId: localStorage.getItem('userId'),
     }
   },
   methods: {
+    categoryForm(category) {
+      this.showCategoryForm = true
+      this.editingCategory = category
+      this.newCategoryName = category ? category.name : null
+      this.newCategoryIcon = category ? category.category_photo : null
+    },
+    hideCategoryForm() {
+      this.showCategoryForm = false
+    },
     async getUserCategories(id){
       const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
       const userData = await response.json()
       console.log(userData)
       this.userCategories = userData.data.user_categories
       console.log(this.userCategories)
+    },
+    handleFileChange(event) {
+      const file = new FileReader()
+      file.readAsDataURL(event.target.files[0])
+      file.onload = () => {
+        this.newCategoryIcon = file.result
+        console.log(this.newCategoryIcon)
+      }
+    },
+    async createNewCategory() {
+      try {
+        const responseCategory = await fetch('http://api-proyecto-6.test/api/user-categories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: this.newCategoryName,
+            category_photo: this.newCategoryIcon,
+            user_id: parseInt(this.userId),
+          }),
+        })
+        if (!responseCategory.ok) {
+          throw new Error(`HTTP error! status: ${responseCategory.status}`)
+        }
+        const dataCategory = await responseCategory.json()
+        console.log(dataCategory)
+        await this.getUserCategories(this.userId)
+      } catch (error) {
+          console.error(error)
+      }
+      this.showCategoryForm = false
+    },
+    async deleteCategory(id) {
+      if (confirm("Are you sure you want to delete this category?\nThe tasks whit this category will be removed to.")) {
+      console.log(id)
+        try {
+          const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+          })
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const data = await response.json()
+          console.log(data)
+          await this.getUserCategories(this.userId)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    },
+    async editCategory() {
+      try {
+        const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${this.editingCategory.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: this.newCategoryName,
+            category_photo: this.newCategoryIcon,
+            user_id: parseInt(this.userId),
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        console.log(data);
+        await this.getUserCategories(this.userId);
+      } catch (error) {
+        console.error(error);
+      }
+  
+      this.showCategoryForm = false;
     },
   },
   created: async function() {
