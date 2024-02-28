@@ -21,7 +21,8 @@
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
         <section v-if="showMenu" class="menu">
-          <router-link to="/user">User Data</router-link>
+          <router-link to="/user">Data</router-link>
+          <router-link to="/user_categories">Categories</router-link>
           <button @click="logout">Logout</button>
         </section>
       </article>

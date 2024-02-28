@@ -66,8 +66,8 @@
   <form v-if="showCategoryForm" class="fastForm" @submit.prevent="createNewCategory">
     <label for="newCategory">New Category:</label>
     <input type="text" id="newCategory" v-model="newCategoryName" required>
-    <label for="newIcon">Icon of your task:</label>
-    <input type="text" id="newIcon" v-model="newCategoryIcon">
+    <label for="category_photo">Category Photo:</label>
+    <input type="file" accept="imge/png, image/jpg, image/jpeg, image/gift" @change="handleFileChange">
     <button type="submit">Create</button>
   </form>
   <section class="container message error-message" v-if="showErrorMessage" >
@@ -130,6 +130,14 @@
       },
       hideCategoryForm() {
         this.showCategoryForm = false
+      },
+      handleFileChange(event) {
+        const file = new FileReader()
+        file.readAsDataURL(event.target.files[0])
+        file.onload = () => {
+          this.newCategoryIcon = file.result
+          console.log(this.newCategoryIcon)
+        }
       },
       async createNewCategory() {
         try {

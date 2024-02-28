@@ -61,6 +61,18 @@ const routes = [
     }
   },
   { 
+    path: '/user_categories',
+    component: () => import('../pages/UserCategories.vue'),
+    meta: { title: 'User Categories' },
+    beforeEnter: (to, from, next) => {
+      if (!isUserLogged()) {
+        next('/login')
+      } else {
+        next()
+      }
+    }
+  },
+  { 
     path: '/contact',
     component: () => import('../pages/Contact.vue'),
     meta: { title: 'Contact' }

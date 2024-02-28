@@ -1,0 +1,15 @@
+
+.delete-category{
+    cursor: pointer;
+    height: 50px;
+  }
+  .edit-category{
+    cursor: pointer;
+    height: 50px;
+  }
+  .delete-category:hover{
+    content: url('../assets/tasksAjusts/deleteHover.png');
+  }
+  .edit-category:hover{
+    content: url('../assets/tasksAjusts/libroHover.png');
+  }
