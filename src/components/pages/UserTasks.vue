@@ -8,8 +8,7 @@
       <option value="pending">Pending</option>
     </select>
     <select v-model=order class="filter">
-      <option value="default">Order by</option>
-      <option value="priority">Priority</option>
+      <option value="priority">Order by priority</option>
       <option value="status">Status</option>
       <option value="date">Date</option>
     </select>
@@ -84,7 +83,7 @@ import { useAuthStore } from '../stores/authStore'
     data() {
       return{
         status: "default",
-        order: "default",
+        order: "priority",
         category: 0,
         userCategories: [],
         tasks: [],
