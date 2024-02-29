@@ -40,19 +40,22 @@
 
 <script>
 import { useThemeStore } from '../stores/themeStore'
+import { useCategoryStore } from '../stores/categoryStore'
+import { useAuthStore } from '../stores/authStore'
 import { mapState } from 'pinia';
-export default{
+
+export default {
   computed: {
     ...mapState(useThemeStore, ['theme']),
+    ...mapState(useAuthStore, ['userId', 'isAuthenticated']),
+    ...mapState(useCategoryStore, ['userCategories']),
   },
-  data(){
+  data() {
     return {
-      userCategories: [],
       showCategoryForm: false,
       newCategoryName: null,
       newCategoryIcon: null,
       editingCategory: null,
-      userId: localStorage.getItem('userId'),
     }
   },
   methods: {
@@ -65,11 +68,6 @@ export default{
     hideCategoryForm() {
       this.showCategoryForm = false
     },
-    async getUserCategories(id){
-      const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
-      const userData = await response.json()
-      this.userCategories = userData.data.user_categories
-    },
     handleFileChange(event) {
       const file = new FileReader()
       file.readAsDataURL(event.target.files[0])
@@ -78,82 +76,56 @@ export default{
         console.log(this.newCategoryIcon)
       }
     },
+    async getUserCategories() {
+      const categoryStore = useCategoryStore();
+      await categoryStore.getUserCategories(this.userId);
+      this.userCategories = categoryStore.userCategories;
+    },
     async createNewCategory() {
+      const categoryStore = useCategoryStore();
       try {
-        const responseCategory = await fetch('http://api-proyecto-6.test/api/user-categories', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: this.newCategoryName,
-            category_photo: this.newCategoryIcon,
-            user_id: parseInt(this.userId),
-          }),
-        })
-        if (!responseCategory.ok) {
-          throw new Error(`HTTP error! status: ${responseCategory.status}`)
-        }
-        const dataCategory = await responseCategory.json()
-        console.log(dataCategory)
-        await this.getUserCategories(this.userId)
+        const categoryData = {
+          name: this.newCategoryName,
+          category_photo: this.newCategoryIcon,
+          user_id: parseInt(this.userId),
+        };
+        await categoryStore.createCategory(categoryData);
+        await this.getUserCategories();
       } catch (error) {
-          console.error(error)
+        console.error(error);
       }
-      this.showCategoryForm = false
+      this.showCategoryForm = false;
     },
     async deleteCategory(id) {
-      if (confirm("Are you sure you want to delete this category?\nThe tasks whit this category will be removed to.")) {
+      if (confirm("Are you sure you want to delete this category?\nThe tasks with this category will be removed too.")) {
+        const categoryStore = useCategoryStore();
         try {
-          const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-          })
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const data = await response.json()
-          console.log(data)
-          await this.getUserCategories(this.userId)
+          await categoryStore.deleteCategory(id);
+          await this.getUserCategories();
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       }
     },
     async editCategory() {
+      const categoryStore = useCategoryStore();
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${this.editingCategory.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: this.newCategoryName,
-            category_photo: this.newCategoryIcon,
-            user_id: parseInt(this.userId),
-          }),
-        });
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-  
-        const data = await response.json();
-        console.log(data);
-        await this.getUserCategories(this.userId);
+        const categoryData = {
+          name: this.newCategoryName,
+          category_photo: this.newCategoryIcon,
+          user_id: parseInt(this.userId),
+        };
+        await categoryStore.updateCategory(this.editingCategory.id, categoryData);
+        await this.getUserCategories();
       } catch (error) {
         console.error(error);
       }
-  
       this.showCategoryForm = false;
     },
   },
-  created: async function() {
-    const userLogued = localStorage.getItem('userId') || null
-    if (userLogued) {
-      await this.getUserCategories(userLogued)
+  created: async function () {
+    if (this.isAuthenticated) {
+      await this.getUserCategories();
     }
   },
 }

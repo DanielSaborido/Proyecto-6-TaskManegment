@@ -10,7 +10,7 @@
     <select v-model=order class="filter">
       <option value="priority">Order by priority</option>
       <option value="status">Status</option>
-      <option value="date">Date</option>
+      <option value="date">Limit Date</option>
     </select>
     <select v-model=category v-if="categoryData.length" class="filter">
       <option v-bind:value=0>All categories</option>
@@ -53,8 +53,9 @@
       <p>Status: {{ taskSelected.status }}</p>
       <p>Creation date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
       <p>Update date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
-      <p v-if="taskSelected.due_date">ue_date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
-      <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
+      <p v-if="taskSelected.due_date">Due date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
+      <p v-else>Due date: Unlimited</p>
+      <p v-if="taskSelected.due_date">Time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
         <img class="delete" src="../../assets/light/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
@@ -159,7 +160,7 @@ import { useAuthStore } from '../stores/authStore'
               const orderMapping = { 'pending': 1, 'processing': 2, 'complete': 3 }
               return orderMapping[a.status] - orderMapping[b.status]
             } else if (this.order === 'date') {
-              return new Date(a.limitDate) - new Date(b.limitDate)
+              return new Date(a.due_date) - new Date(b.due_date)
             }
           })
         }
