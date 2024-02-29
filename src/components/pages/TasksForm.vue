@@ -50,8 +50,6 @@
     </select>
     <label for="limitDate">Limit Date:</label>
     <input type="date" id="limitDate" name="limitDate" v-model=limitDate>
-    <label for="limitTime">Limit Time:</label>
-    <input type="time" id="limitTime" name="limitTime" v-model=limitTime>
     <section class="container">
       <input type="checkbox" class="checkPriority" 
         id = "priority"
@@ -84,6 +82,7 @@
 import { mapState } from 'pinia'
 import { useAuthStore } from '../stores/authStore'
 import { useCategoryStore } from '../stores/categoryStore'
+import { useTaskStore } from '../stores/taskStore'
   export default {
     props: {
       id: {
@@ -94,23 +93,22 @@ import { useCategoryStore } from '../stores/categoryStore'
     computed: {
       ...mapState(useAuthStore, ['userId','isAuthenticated']),
       ...mapState(useCategoryStore, ['categories', 'userCategories']),
+      ...mapState(useTaskStore, ['localtaks', 'usertasks']),
     },
     data() {
       return{
+        showCategoryForm: false,
+        newCategoryName: null,
+        newCategoryIcon: null,
         title: null,
         description: null,
         categorieSelected: null,
         customcategorieSelected: null,
-        showCategoryForm: false,
-        newCategoryName: null,
-        newCategoryIcon: null,
         status: "pending",
         creationDate: null,
         limitDate: null,
-        limitTime:null,
         priority: false,
         showErrorMessage: false,
-        userTasks: null,
       }
     },
     methods:{
@@ -129,11 +127,11 @@ import { useCategoryStore } from '../stores/categoryStore'
       deselectGeneralCategory() {
         this.categorieSelected = null
       },
-      submitForm() {
+      async submitForm() {
         if (this.id) {
-          this.updateTask()
+          await this.updateTask()
         } else {
-          this.createTask()
+          await this.createTask()
         }
       },
       categoryForm() {
@@ -167,38 +165,23 @@ import { useCategoryStore } from '../stores/categoryStore'
       },
       async createTask() {
         if (this.title && this.description) {
+          const taskStore = useTaskStore()
           if (this.isAuthenticated) {
-            try {
-              const requestBody = {
-                title: this.title,
-                user_id: parseInt(this.userId),
-                [this.categorieSelected ? 'category_id' : 'user_category_id']: this.categorieSelected ? this.categorieSelected : this.customcategorieSelected,
-                description: this.description,
-                due_date: this.limitDate,
-                status: this.status,
-                priority: this.priority,
-              }
-              const responseTask = await fetch('http://api-proyecto-6.test/api/tasks', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(requestBody),
-              })
-              if (!responseTask.ok) {
-                throw new Error(`HTTP error! status: ${responseTask.status}`)
-              }
-              const dataTask = await responseTask.json()
-              console.log(dataTask)
-            } catch (error) {
-              console.error(error)
+            const requestBody = {
+              title: this.title,
+              user_id: parseInt(this.userId),
+              [this.categorieSelected ? 'category_id' : 'user_category_id']: this.categorieSelected ? this.categorieSelected : this.customcategorieSelected,
+              description: this.description,
+              due_date: this.limitDate,
+              status: this.status,
+              priority: this.priority,
             }
+            taskStore.createTask(this.isAuthenticated, requestBody)
           } else {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || []
             var f = new Date()
             this.creationDate = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
-            let task = {
-              id: tasks.length,
+            const requestBody = {
+              id: this.localtaks.length,
               title: this.title,
               description: this.description,
               category_id: this.categorieSelected,
@@ -206,9 +189,8 @@ import { useCategoryStore } from '../stores/categoryStore'
               creationDate: this.creationDate,
               limitDate: this.limitDate,
               priority: this.priority
-            }
-            tasks.push(task)
-            localStorage.setItem('tasks', JSON.stringify(tasks))   
+            } 
+            taskStore.createTask(this.isAuthenticated, requestBody)
           }
           this.$router.push('/tasks')
         } else {
@@ -217,34 +199,22 @@ import { useCategoryStore } from '../stores/categoryStore'
       },
       async updateTask(){
         if (this.title && this.description) {
+          const taskStore = useTaskStore()
           if (this.isAuthenticated){
-            try {
-              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${this.id}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  title: this.title,
-                  category_id: this.categorieSelected,
-                  user_category_id: this.customcategorieSelected,
-                  description: this.description,
-                  due_date: this.limitDate,
-                  status: this.status,
-                  priority: this.priority,
-                }),
-              })
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-              }
-            } catch (error) {
-              console.error(error)
+            const requestBody = {
+              title: this.title,
+              category_id: this.categorieSelected,
+              user_category_id: this.customcategorieSelected,
+              description: this.description,
+              due_date: this.limitDate,
+              status: this.status,
+              priority: this.priority,
             }
+            taskStore.updateTask(this.isAuthenticated, this.id, requestBody)
           } else {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || []
             var f = new Date()
             this.creationDate = f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
-            let task = {
+            const requestBody = {
               title: this.title,
               description: this.description,
               category_id: this.categorieSelected,
@@ -253,8 +223,7 @@ import { useCategoryStore } from '../stores/categoryStore'
               limitDate: this.limitDate,
               priority: this.priority
             }
-            tasks.push(task)
-            localStorage.setItem('tasks', JSON.stringify(tasks))   
+            taskStore.updateTask(this.isAuthenticated, this.id, requestBody) 
           }
           this.$router.push('/tasks')
         } else {
@@ -265,40 +234,30 @@ import { useCategoryStore } from '../stores/categoryStore'
         this.showErrorMessage = false
         this.showSucceedMessage = false
       },
-      async fetchUserData() {
-        try {
-          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const userData = await response.json()
-          this.userTasks = userData.data.tasks
-        } catch (error) {
-          console.error(error)
-          return []
-        }
+      async getTasks(loged, userId) {
+        const taskStore = useTaskStore()
+        taskStore.getTasks(loged, userId)
       },
     },
     created: async function() {
+      await this.getTasks(this.isAuthenticated, this.userId)
       await this.getCategories()
       if (this.isAuthenticated) {
         await this.getUserCategories()
       }
       if (this.isAuthenticated && this.id) {
-        await this.fetchUserData()
-        console.log(this.userTasks)
-        console.log(this.userTasks.find((task) => task.id == this.id))
-        let foundTask = this.userTasks.find((task) => task.id == this.id)
+        const tasks = this.usertasks.data
+        let foundTask = tasks.find((task) => task.id == this.id);
         if (foundTask) {
-            this.title = foundTask.title
-            this.description = foundTask.description
-            this.categorieSelected = foundTask.category_id
-            this.customcategorieSelected = foundTask.user_category_id
-            this.status = foundTask.status
-            this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0]
-            this.priority = foundTask.priority === 1
+            this.title = foundTask.title;
+            this.description = foundTask.description;
+            this.categorieSelected = foundTask.category_id;
+            this.customcategorieSelected = foundTask.user_category_id;
+            this.status = foundTask.status;
+            this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0];
+            this.priority = foundTask.priority === 1;
         } else {
-          this.$router.push('/:pathMach(.*)*')
+            this.$router.push('/:pathMach(.*)*');
         }
       }
     }

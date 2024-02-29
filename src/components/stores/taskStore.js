@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useAuthStore } from './authStore'
 
 export const useTaskStore = defineStore('task',{
   state: () => ({
@@ -7,21 +6,22 @@ export const useTaskStore = defineStore('task',{
     localtaks: [],
   }),
   actions: {
-    async getUserTasks(userId) {
-      try {
-        const response = await fetch(`http://api-proyecto-6.test/api/tasks?user_id=${userId}`)
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+    async getTasks(loged, userId) {
+      if (loged){
+        try {
+          const response = await fetch(`http://api-proyecto-6.test/api/tasks?user_id=${userId}`)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const data = await response.json()
+          this.usertasks = data
+        } catch (error) {
+          console.error(error)
         }
-        const data = await response.json()
-        this.usertasks = data
-      } catch (error) {
-        console.error(error)
+      } else {
+        const localTasks = localStorage.getItem('tasks')
+        this.localtaks = localTasks ? JSON.parse(localTasks) : []
       }
-    },
-    async getTasks() {
-      const localTasks = localStorage.getItem('tasks')
-      this.localtaks = localTasks ? JSON.parse(localTasks) : []
     },
     async createTask(loged, taskData) {
       if (loged){
