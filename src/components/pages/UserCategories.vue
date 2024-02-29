@@ -104,7 +104,6 @@ export default{
     },
     async deleteCategory(id) {
       if (confirm("Are you sure you want to delete this category?\nThe tasks whit this category will be removed to.")) {
-      console.log(id)
         try {
           const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${id}`, {
             method: 'DELETE',

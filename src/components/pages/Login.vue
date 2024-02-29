@@ -90,7 +90,6 @@ import { useAuthStore } from '../stores/authStore'
           email: null,
           password: null,
           Rpassword: null,
-          phone: null,
           login: true,
           create: false,
           forget: false,

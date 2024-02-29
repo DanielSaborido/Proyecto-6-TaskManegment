@@ -16,7 +16,7 @@
     />
     <label htmlFor="category">
       Category Task:
-      <q v-if="!logued">Log in to create your own categories</q>
+      <q v-if="!isAuthenticated">Log in to create your own categories</q>
       <q v-else @click="categoryForm">Click here for new category</q>
     </label>
     <section class="categories">
@@ -31,7 +31,7 @@
         <label v-bind:htmlFor=index+1>{{category}}</label>
       </section>
     </section>
-    <section class="categories" v-if="logued">
+    <section class="categories" v-if="isAuthenticated">
       <section class="container category" v-for="(category, index) in userCategories" :key="index">
         <input type="radio" class="radio" 
           v-bind:id = "`user_${category.id}`" 
@@ -81,12 +81,17 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useAuthStore } from '../stores/authStore'
   export default {
     props: {
       id: {
         type: Number,
         required: false
       }
+    },
+    computed: {
+      ...mapState(useAuthStore, ['isAuthenticated']),
     },
     data() {
       return{
@@ -104,13 +109,11 @@
         limitTime:null,
         priority: false,
         showErrorMessage: false,
-        logued: !!localStorage.getItem('userId'),
         userId: localStorage.getItem('userId') || null,
         userTasks: null,
         userCategories: [],
       }
     },
-
     methods:{
       deselectCustomCategory() {
         this.customcategorieSelected = null
@@ -164,7 +167,7 @@
       },
       async createTask() {
         if (this.title && this.description) {
-          if (this.logued) {
+          if (this.isAuthenticated) {
             try {
               const requestBody = {
                 title: this.title,
@@ -214,7 +217,7 @@
       },
       async updateTask(){
         if (this.title && this.description) {
-          if (this.logued){
+          if (this.isAuthenticated){
             try {
               const response = await fetch(`http://api-proyecto-6.test/api/tasks/${this.id}`, {
                 method: 'PUT',
@@ -262,23 +265,15 @@
         this.showErrorMessage = false
         this.showSucceedMessage = false
       },
-      async fetchUserCategories() {
+      async fetchUserData() {
         try {
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
           }
-          const data = await response.json()
-          this.userCategories = data.data.user_categories
-        } catch (error) {
-          console.error(error)
-        }
-      },
-      async fetchDataFromAPI() {
-        try {
-          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
           this.userTasks = userData.data.tasks
+          this.userCategories = userData.data.user_categories
         } catch (error) {
           console.error(error)
           return []
@@ -286,9 +281,8 @@
       },
     },
     created: async function() {
-      await this.fetchUserCategories()
-      if (this.userId && this.id) {
-        await this.fetchDataFromAPI()
+      await this.fetchUserData()
+      if (this.isAuthenticated && this.id) {
         console.log(this.userTasks)
         console.log(this.userTasks.find((task) => task.id == this.id))
         let foundTask = this.userTasks.find((task) => task.id == this.id)

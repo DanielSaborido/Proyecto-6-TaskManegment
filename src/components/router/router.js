@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory} from "vue-router"
 import Home from '../pages/Home.vue'
-import { isAuthenticated, isUserLogged } from "./auth_user"
+import { useAuthStore } from '../stores/authStore'
+
 
 const routes = [
   { 
@@ -8,7 +9,8 @@ const routes = [
     component: Home, 
     meta: { title: 'Fast Task' },
     beforeEnter: (to, from, next) => {
-      if (isAuthenticated()) {
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
         next('/tasks')
       } else {
         next()
@@ -20,7 +22,8 @@ const routes = [
     component: () => import('../pages/UserTasks.vue'),
     meta: { title: 'Fast Task' },
     beforeEnter: (to, from, next) => {
-      if (!isAuthenticated()) {
+      const authStore = useAuthStore()
+      if (!authStore.isAuthenticated) {
         next('/')
       } else {
         next()
@@ -53,7 +56,8 @@ const routes = [
     component: () => import('../pages/UserData.vue'),
     meta: { title: 'User Data' },
     beforeEnter: (to, from, next) => {
-      if (!isUserLogged()) {
+      const authStore = useAuthStore()
+      if (!authStore.isAuthenticated) {
         next('/login')
       } else {
         next()
@@ -65,7 +69,8 @@ const routes = [
     component: () => import('../pages/UserCategories.vue'),
     meta: { title: 'User Categories' },
     beforeEnter: (to, from, next) => {
-      if (!isUserLogged()) {
+      const authStore = useAuthStore()
+      if (!authStore.isAuthenticated) {
         next('/login')
       } else {
         next()

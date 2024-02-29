@@ -32,7 +32,7 @@
 
 <script>
 import { useThemeStore } from '../stores/themeStore'
-import { mapState } from 'pinia';
+import { mapState } from 'pinia'
 import { useAuthStore } from '../stores/authStore'
   export default {
     data() {
@@ -49,9 +49,6 @@ import { useAuthStore } from '../stores/authStore'
       route() {
         return this.$route.path
       },
-    },
-    watch: {
-      '$route': 'checkUser'
     },
     methods: {
       changeTheme(){

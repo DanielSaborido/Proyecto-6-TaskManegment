@@ -52,9 +52,9 @@
         <span v-else>{{ getCategory(taskSelected.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ taskSelected.status }}</p>
-      <p>creation_date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
-      <p>update_date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
-      <p v-if="taskSelected.due_date">due_date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
+      <p>Creation date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
+      <p>Update date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
+      <p v-if="taskSelected.due_date">ue_date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
       <p v-if="taskSelected.due_date">time remaing: {{ timeRemaining }}</p>
       <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
@@ -69,13 +69,18 @@
     <h3>Start creating tasks to do </h3>
   </section>
   <section class="bt-complete">
-    <button @click="completeAllTasks">Marck all tasks as complete</button>
+    <button @click="completeAllTasks">Mark all tasks as complete</button>
     <button @click="deleteCompletedTasks">Delete all complete tasks</button>
   </section>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useAuthStore } from '../stores/authStore'
   export default {
+    computed: {
+      ...mapState(useAuthStore, ['isAuthenticated']),
+    },
     data() {
       return{
         status: "default",
@@ -86,7 +91,6 @@
         filteredTasks: [],
         taskSelected: null,
         rotationClasses: ["rotate75", "rotate5", "rotate25", "rotate0", "rotate-75", "rotate-5", "rotate-25"],
-        logued: !!localStorage.getItem('userId'),
         userData: null,
         categoryData: [],
         userId: localStorage.getItem('userId') || null,
@@ -196,7 +200,7 @@
         this.timeRemaining = `${days}d ${hours}h ${minutes}m ${seconds}s`;
       },
       async changePriority(id){
-        if (this.logued) {
+        if (this.isAuthenticated) {
           try {
             const task = this.filteredTasks.find(task => task.id === id)
             const taskId = task.id
@@ -224,7 +228,7 @@
       },
       async deleteTask(index) {
         if (confirm("Are you sure you want to delete this task?")) {
-          if (this.logued){
+          if (this.isAuthenticated){
             try {
               const response = await fetch(`http://api-proyecto-6.test/api/tasks/${index}`, {
                 method: 'DELETE',
@@ -249,7 +253,7 @@
         }
       },
       async updateTaskStatus(index) {
-        if (this.logued) {
+        if (this.isAuthenticated) {
           try {
             const task = this.filteredTasks.find(task => task.id === index)
             const taskId = task.id
@@ -293,7 +297,7 @@
         this.$router.push(`/taskf/${index}`)
       },
       async completeAllTasks() {
-        if (this.logued) {
+        if (this.isAuthenticated) {
           try {
             for (let task of this.filteredTasks) {
               const taskId = task.id
@@ -324,7 +328,7 @@
         }
       },
       async deleteCompletedTasks() {
-        if (this.logued) {
+        if (this.isAuthenticated) {
           try {
             for (let task of this.filteredTasks) {
               let taskStatus = task.status
