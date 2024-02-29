@@ -31,15 +31,17 @@
 </template>
 
 <script>
+import { useThemeStore } from '../stores/themeStore'
+import { mapState } from 'pinia';
   export default {
     data() {
       return {
-        theme: "",
         showMenu: false,
         userData: localStorage.getItem('userId'),
       }
     },
     computed: {
+      ...mapState(useThemeStore, ['theme']),
       title() {
         return this.$route.meta.title || 'Default Title'
       },
@@ -51,20 +53,15 @@
       '$route': 'checkUser'
     },
     created() {
-      this.loadTheme()
       this.checkUser()
     },
     methods: {
       checkUser() {
         this.userData = localStorage.getItem('userId');
       },
-      loadTheme() {
-        this.theme = localStorage.getItem('theme')
-      },
       changeTheme(){
-        this.theme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'
-        localStorage.setItem('theme', this.theme)
-        document.documentElement.setAttribute('data-theme', this.theme)
+        const useTheme = useThemeStore()
+        useTheme.changeTheme()
       },
       toggleMenu() {
         this.showMenu = !this.showMenu

@@ -39,10 +39,14 @@
 </template>
 
 <script>
+import { useThemeStore } from '../stores/themeStore'
+import { mapState } from 'pinia';
 export default{
+  computed: {
+    ...mapState(useThemeStore, ['theme']),
+  },
   data(){
     return {
-      theme: "",
       userCategories: [],
       showCategoryForm: false,
       newCategoryName: null,
@@ -50,9 +54,6 @@ export default{
       editingCategory: null,
       userId: localStorage.getItem('userId'),
     }
-  },
-  mounted() {
-    this.theme = localStorage.getItem('theme')
   },
   methods: {
     categoryForm(category) {

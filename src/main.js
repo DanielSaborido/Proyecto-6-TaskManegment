@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import router from "./components/router/router.js"
+import { createPinia } from 'pinia'
 // import auth from './components/stores/authStore.js'
 // import category from './components/stores/categoryStore.js'
 // import tasks from './components/stores/taskStore.js'
@@ -15,6 +16,7 @@ import './styles/theme.css';
 import './styles/variables.css';
 import './styles/error.css';
 import './styles/categories.css';
+import './styles/user.css';
 import App from './App.vue'
 
 const localTheme = localStorage.getItem('theme')
@@ -23,4 +25,6 @@ const theme = localTheme !== null ? localTheme : (window.matchMedia('(prefers-co
 localStorage.setItem('theme', theme)
 document.documentElement.setAttribute('data-theme', theme)
 
-createApp(App).use(router).mount('#app')
+const pinia = createPinia()
+
+createApp(App).use(pinia).use(router).mount('#app')

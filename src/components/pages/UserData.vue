@@ -1,6 +1,6 @@
 <template>
   <div v-if="userData">
-    <img :src="'http://api-proyecto-6.test/storage/' + userData.data.profile_photo" alt="profile_photo" v-if="userData.data.profile_photo">
+    <img :src="'http://api-proyecto-6.test/storage/' + userData.data.profile_photo" alt="profile_photo" v-if="userData.data.profile_photo" class="profile">
     <h2>{{ userData.data.name }}</h2>
     <p>Email: {{ userData.data.email }}</p>
     <p>Creation Date: {{ formatDate(userData.data.created_at) }}</p>
@@ -15,12 +15,12 @@
     <input v-model="name" type="text" id="name">
     <label for="email">Email:</label>
     <input v-model="email" type="email" id="email">
-    <label for="current_password">Password:</label>
+    <label for="current_password">Current Password:</label>
     <input v-model="current_password" type="password" id="current_password">
     <label for="password">New Password:</label>
     <input v-model="password" type="password" id="password">
     <label for="profile_photo">Profile Photo:</label>
-    <input type="file" accept="imge/png, image/jpg, image/jpeg, image/gift" @change="handleFileChange">
+    <input type="file" accept="image/png, image/jpg, image/jpeg, image/gif" @change="handleFileChange">
     <button type="submit">Edit user</button>
   </form>
 </template>
@@ -67,6 +67,11 @@ export default {
         }
 
         await this.getUserData(this.userData.data.id)
+        this.name = null
+        this.email = null
+        this.current_password = null
+        this.password = null
+        this.profile_photo = null
         this.showUserForm = false
       } catch (error) {
         console.error(error)

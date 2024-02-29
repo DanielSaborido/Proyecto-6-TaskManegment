@@ -67,7 +67,7 @@
     <label for="newCategory">New Category:</label>
     <input type="text" id="newCategory" v-model="newCategoryName" required>
     <label for="category_photo">Category Photo:</label>
-    <input type="file" accept="imge/png, image/jpg, image/jpeg, image/gift" @change="handleFileChange">
+    <input type="file" accept="image/png, image/jpg, image/jpeg, image/gift" @change="handleFileChange">
     <button type="submit">Create</button>
   </form>
   <section class="container message error-message" v-if="showErrorMessage" >

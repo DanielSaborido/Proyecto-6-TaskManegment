@@ -24,7 +24,7 @@
       <h3>{{ task.title }}</h3>
       <p>{{ truncateDescription(task.description) }}</p>
       <p v-if="task.category_id">Category: 
-        <img v-if="getCategory(task.category_id, false).category_photo" :src="getCategory(task.category_id, false).category_photo" :alt="getCategory(task.category_id, false).name">
+        <img v-if="getCategory(task.category_id, false).category_photo" :src="getCategory(task.category_id, false).category_photo" :alt="getCategory(task.category_id, false).name" class="category-icon">
         <span v-else>{{ getCategory(task.category_id, false).name }}</span>
       </p>
       <p v-if="task.user_category_id">Category: 
@@ -44,11 +44,11 @@
       <h3>{{ taskSelected.title }}</h3>
       <p>{{ taskSelected.description }}</p>
       <p v-if="taskSelected.category_id">Category: 
-        <img v-if="getCategory(taskSelected.category_id, false).category_photo" :src="getCategory(taskSelected.category_id, false).category_photo" :alt="getCategory(taskSelected.category_id, false).name">
+        <img v-if="getCategory(taskSelected.category_id, false).category_photo" :src="getCategory(taskSelected.category_id, false).category_photo" :alt="getCategory(taskSelected.category_id, false).name" class="category-icon">
         <span v-else>{{ getCategory(taskSelected.category_id, false).name }}</span>
       </p>
       <p v-if="taskSelected.user_category_id">Category: 
-        <img v-if="getCategory(taskSelected.user_category_id, true).category_photo" :src="getCategory(taskSelected.user_category_id, true).category_photo" :alt="getCategory(taskSelected.user_category_id, true).name">
+        <img v-if="getCategory(taskSelected.user_category_id, true).category_photo" :src="getCategory(taskSelected.user_category_id, true).category_photo" :alt="getCategory(taskSelected.user_category_id, true).name" class="category-icon">
         <span v-else>{{ getCategory(taskSelected.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ taskSelected.status }}</p>
