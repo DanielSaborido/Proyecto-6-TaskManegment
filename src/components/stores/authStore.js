@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('userId', userId)
       localStorage.removeItem('trialStarted')
       localStorage.removeItem('trialEndDate')
+      localStorage.removeItem('tasks')
     },
     logout() {
       this.isAuthenticated = false

@@ -1,9 +1,6 @@
 import { createApp } from 'vue'
 import router from "./components/router/router.js"
 import { createPinia } from 'pinia'
-// import auth from './components/stores/authStore.js'
-// import category from './components/stores/categoryStore.js'
-// import tasks from './components/stores/taskStore.js'
 //import './style.css'
 import './styles/common.css';
 import './styles/fonts.css';

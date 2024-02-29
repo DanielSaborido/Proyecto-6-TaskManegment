@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/authStore'
   export default {  
     data() {
         return{
@@ -94,12 +95,20 @@
           create: false,
           forget: false,
           showErrorMessage: false,
-          users: null,
         }
     },
     methods: {
-      async getUsers(){
-        this.users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
+      async searchUser(){
+        const users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
+        console.log(users)
+        let user = users.find(user => user.email === this.email)
+        if (user) {
+          const userLog = useAuthStore()
+          userLog.login(user.id)
+          this.$router.push('/tasks')
+        } else {
+          console.log("The email was not found in the database.")
+        }
       },
       async loginAcount() {
         if (this.validateEmail && this.password) {
@@ -119,16 +128,7 @@
             }
             const data = await response.json()
             if (data.message === 'Password correct') {
-              let user = this.users.find(user => user.email === this.email)
-              if (user) {
-                localStorage.removeItem('trialStarted')
-                localStorage.removeItem('trialEndDate')
-                localStorage.removeItem('tasks')
-                localStorage.setItem('userId', user.id)
-                this.$router.push('/tasks')
-              } else {
-                console.log("The email was not found in the database.")
-              }
+              this.searchUser()
             } else {
               console.log("Incorrect email or password.")
               this.showErrorMessage = true
@@ -142,7 +142,7 @@
         }
       },
       async createAccount() {
-        if (this.validateName && this.validateEmail && this.validatePassword && !this.emailExists) {
+        if (this.validateName && this.validateEmail && this.validatePassword) {
           try {
             const response = await fetch('http://api-proyecto-6.test/api/users', {
               method: 'POST',
@@ -160,8 +160,7 @@
             }
             const data = await response.json()
             console.log(data)
-            this.create = false
-            this.login = true
+            this.searchUser()
           } catch (error) {
             console.error(error)
           }
@@ -187,9 +186,6 @@
           const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
           return re.test(this.email)
       },
-      emailExists() {
-        return this.users.find(user => user.email === this.email)
-      },
       validatePassword() {
           return this.password === this.Rpassword
       },
@@ -198,8 +194,5 @@
         return re.test(this.name)
       }
     },
-    mounted(){
-      this.getUsers()
-    }
   } 
 </script>

@@ -13,7 +13,7 @@
         <img v-if="theme === 'light'" src="../../assets/light/contact-icon.png" alt="Contact" class="icon">
         <img v-else src="../../assets/dark/contact-icon.png" alt="Contact" class="icon">
       </router-link>
-      <router-link v-if="!userData" to="/login" class="userIcon">
+      <router-link v-if="!isAuthenticated" to="/login" class="userIcon">
         <img v-if="theme === 'light'" src="../../assets/light/user.png" alt="User" class="icon">
         <img v-else src="../../assets/dark/user.png" alt="User" class="icon">
       </router-link>
@@ -33,15 +33,16 @@
 <script>
 import { useThemeStore } from '../stores/themeStore'
 import { mapState } from 'pinia';
+import { useAuthStore } from '../stores/authStore'
   export default {
     data() {
       return {
         showMenu: false,
-        userData: localStorage.getItem('userId'),
       }
     },
     computed: {
       ...mapState(useThemeStore, ['theme']),
+      ...mapState(useAuthStore, ['isAuthenticated']),
       title() {
         return this.$route.meta.title || 'Default Title'
       },
@@ -52,13 +53,7 @@ import { mapState } from 'pinia';
     watch: {
       '$route': 'checkUser'
     },
-    created() {
-      this.checkUser()
-    },
     methods: {
-      checkUser() {
-        this.userData = localStorage.getItem('userId');
-      },
       changeTheme(){
         const useTheme = useThemeStore()
         useTheme.changeTheme()
@@ -67,9 +62,8 @@ import { mapState } from 'pinia';
         this.showMenu = !this.showMenu
       },
       logout() {
-        localStorage.removeItem('userId')
-        localStorage.removeItem('tasks')
-        this.userData = null
+        const userLog = useAuthStore()
+        userLog.logout()
         this.$router.push('/')
       }
     },
