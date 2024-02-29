@@ -77,55 +77,55 @@ export default {
       }
     },
     async getUserCategories() {
-      const categoryStore = useCategoryStore();
-      await categoryStore.getUserCategories(this.userId);
-      this.userCategories = categoryStore.userCategories;
+      const categoryStore = useCategoryStore()
+      await categoryStore.getUserCategories(this.userId)
+      this.userCategories = categoryStore.userCategories
     },
     async createNewCategory() {
-      const categoryStore = useCategoryStore();
+      const categoryStore = useCategoryStore()
       try {
         const categoryData = {
           name: this.newCategoryName,
           category_photo: this.newCategoryIcon,
           user_id: parseInt(this.userId),
-        };
-        await categoryStore.createCategory(categoryData);
-        await this.getUserCategories();
+        }
+        await categoryStore.createCategory(categoryData)
+        await this.getUserCategories()
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-      this.showCategoryForm = false;
+      this.showCategoryForm = false
     },
     async deleteCategory(id) {
       if (confirm("Are you sure you want to delete this category?\nThe tasks with this category will be removed too.")) {
-        const categoryStore = useCategoryStore();
+        const categoryStore = useCategoryStore()
         try {
-          await categoryStore.deleteCategory(id);
-          await this.getUserCategories();
+          await categoryStore.deleteCategory(id)
+          await this.getUserCategories()
         } catch (error) {
-          console.error(error);
+          console.error(error)
         }
       }
     },
     async editCategory() {
-      const categoryStore = useCategoryStore();
+      const categoryStore = useCategoryStore()
       try {
         const categoryData = {
           name: this.newCategoryName,
           category_photo: this.newCategoryIcon,
           user_id: parseInt(this.userId),
-        };
-        await categoryStore.updateCategory(this.editingCategory.id, categoryData);
-        await this.getUserCategories();
+        }
+        await categoryStore.updateCategory(this.editingCategory.id, categoryData)
+        await this.getUserCategories()
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-      this.showCategoryForm = false;
+      this.showCategoryForm = false
     },
   },
   created: async function () {
     if (this.isAuthenticated) {
-      await this.getUserCategories();
+      await this.getUserCategories()
     }
   },
 }

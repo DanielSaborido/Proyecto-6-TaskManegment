@@ -6,6 +6,10 @@ export const useCategoryStore = defineStore('category', {
     userCategories: [],
   }),
   actions: {
+    async getCategories(){
+      const response = await fetch(`http://api-proyecto-6.test/api/categories`)
+      this.categories = await response.json()
+    },
     async getUserCategories(userId) {
       try {
         const response = await fetch(`http://api-proyecto-6.test/api/user-categories?user_id=${userId}`)

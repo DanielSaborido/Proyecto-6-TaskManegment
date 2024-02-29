@@ -12,9 +12,9 @@
       <option value="status">Status</option>
       <option value="date">Limit Date</option>
     </select>
-    <select v-model=category v-if="categoryData.length" class="filter">
+    <select v-model=categorySelected class="filter">
       <option v-bind:value=0>All categories</option>
-      <option v-for="(category, index) in categoryData" v-bind:value="'category_' + category.id">{{ category.name }}</option>
+      <option v-for="(category, index) in categories" v-bind:value="'category_' + category.id">{{ category.name }}</option>
       <option v-for="(userCategory, index) in userCategories" v-bind:value="'userCategory_' + userCategory.id">{{ userCategory.name }}</option>
     </select>
   </section>
@@ -77,23 +77,22 @@
 <script>
 import { mapState } from 'pinia'
 import { useAuthStore } from '../stores/authStore'
+import { useCategoryStore } from '../stores/categoryStore'
   export default {
     computed: {
-      ...mapState(useAuthStore, ['isAuthenticated']),
+      ...mapState(useAuthStore, ['userId', 'isAuthenticated']),
+      ...mapState(useCategoryStore, ['categories', 'userCategories']),
     },
     data() {
       return{
         status: "default",
         order: "priority",
-        category: 0,
-        userCategories: [],
+        categorySelected: 0,
         tasks: [],
         filteredTasks: [],
         taskSelected: null,
         rotationClasses: ["rotate75", "rotate5", "rotate25", "rotate0", "rotate-75", "rotate-5", "rotate-25"],
         userData: null,
-        categoryData: [],
-        userId: localStorage.getItem('userId') || null,
         timeRemaining: null,
         intervalId: null,
       }
@@ -111,7 +110,7 @@ import { useAuthStore } from '../stores/authStore'
       order() {
         this.sortTasks()
       },
-      category() {
+      categorySelected() {
         this.filterTasks()
       },
       taskSelected: {
@@ -133,9 +132,14 @@ import { useAuthStore } from '../stores/authStore'
       },
     },
     methods: {
-      async getCategories(){
-        const response = await fetch(`http://api-proyecto-6.test/api/categories`)
-        this.categoryData = await response.json()
+      async getCategories() {
+        const categoryStore = useCategoryStore()
+        await categoryStore.getCategories()
+      },
+      async getUserCategories() {
+        const categoryStore = useCategoryStore()
+        await categoryStore.getUserCategories(this.userId)
+        this.userCategories = categoryStore.userCategories
       },
       getRandomRotationClass() {
         const randomIndex = Math.floor(Math.random() * this.rotationClasses.length);
@@ -144,9 +148,9 @@ import { useAuthStore } from '../stores/authStore'
       filterTasks() {
         this.filteredTasks = this.tasks.filter(task => {
           return (this.status === 'default' || task.status === this.status) &&
-          (this.category === 0 || 
-            (this.category.startsWith('category_') && task.category_id === parseInt(this.category.slice(9))) ||
-            (this.category.startsWith('userCategory_') && task.user_category_id === parseInt(this.category.slice(13)))
+          (this.categorySelected === 0 || 
+            (this.categorySelected.startsWith('category_') && task.category_id === parseInt(this.categorySelected.slice(9))) ||
+            (this.categorySelected.startsWith('userCategory_') && task.user_category_id === parseInt(this.categorySelected.slice(13)))
           )
         })
         this.sortTasks()
@@ -173,8 +177,8 @@ import { useAuthStore } from '../stores/authStore'
         }
       },
       getCategory(categoryId, custom) {
-        if (!custom && this.categoryData) {
-          const matchingCategory = this.categoryData.find(category => category.id === categoryId)
+        if (!custom && this.categories) {
+          const matchingCategory = this.categories.find(category => category.id === categoryId)
           return matchingCategory ? matchingCategory : { name: 'Unknown', category_photo: null }
         } else if (custom && this.userCategories){
           const matchingCategory = this.userCategories.find(category => category.id === categoryId)
@@ -363,7 +367,6 @@ import { useAuthStore } from '../stores/authStore'
           const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
           const userData = await response.json()
           if (userData && userData.data) {
-            this.userCategories = userData.data.user_categories || [];
             const apiTasks = userData.data.tasks || [];
             return apiTasks;
           } else {
@@ -380,7 +383,8 @@ import { useAuthStore } from '../stores/authStore'
       await this.getCategories()
       let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
       let apiTasks = []
-      if (this.userId) {
+      if (this.isAuthenticated) {
+        await this.getUserCategories()
         apiTasks = await this.fetchDataFromAPI()
       }
       this.tasks = [...localTasks, ...apiTasks]

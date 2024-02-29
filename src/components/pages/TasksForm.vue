@@ -22,13 +22,13 @@
     <section class="categories">
       <section class="container category" v-for="(category,index) in categories">
         <input type="radio" class="radio" 
-          v-bind:id = index+1
+          v-bind:id = category.id
           name = "category"
-          v-bind:value="index+1"
+          v-bind:value="category.id"
           v-model="categorieSelected"
           @change="deselectCustomCategory"
         />
-        <label v-bind:htmlFor=index+1>{{category}}</label>
+        <label v-bind:htmlFor=category.id>{{category.name}}</label>
       </section>
     </section>
     <section class="categories" v-if="isAuthenticated">
@@ -83,6 +83,7 @@
 <script>
 import { mapState } from 'pinia'
 import { useAuthStore } from '../stores/authStore'
+import { useCategoryStore } from '../stores/categoryStore'
   export default {
     props: {
       id: {
@@ -91,13 +92,13 @@ import { useAuthStore } from '../stores/authStore'
       }
     },
     computed: {
-      ...mapState(useAuthStore, ['isAuthenticated']),
+      ...mapState(useAuthStore, ['userId','isAuthenticated']),
+      ...mapState(useCategoryStore, ['categories', 'userCategories']),
     },
     data() {
       return{
         title: null,
         description: null,
-        categories: ["Home","Job","Activities","Others"],
         categorieSelected: null,
         customcategorieSelected: null,
         showCategoryForm: false,
@@ -109,12 +110,19 @@ import { useAuthStore } from '../stores/authStore'
         limitTime:null,
         priority: false,
         showErrorMessage: false,
-        userId: localStorage.getItem('userId') || null,
         userTasks: null,
-        userCategories: [],
       }
     },
     methods:{
+      async getCategories() {
+        const categoryStore = useCategoryStore()
+        await categoryStore.getCategories()
+      },
+      async getUserCategories() {
+        const categoryStore = useCategoryStore()
+        await categoryStore.getUserCategories(this.userId)
+        this.userCategories = categoryStore.userCategories
+      },
       deselectCustomCategory() {
         this.customcategorieSelected = null
       },
@@ -143,23 +151,15 @@ import { useAuthStore } from '../stores/authStore'
         }
       },
       async createNewCategory() {
+        const categoryStore = useCategoryStore()
         try {
-          const responseTask = await fetch('http://api-proyecto-6.test/api/user-categories', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: this.newCategoryName,
-              category_photo: this.newCategoryIcon,
-              user_id: parseInt(this.userId),
-            }),
-          })
-          if (!responseTask.ok) {
-            throw new Error(`HTTP error! status: ${responseTask.status}`)
-          }
-          const dataTask = await responseTask.json()
-          console.log(dataTask)
+          const categoryData = {
+            name: this.newCategoryName,
+            category_photo: this.newCategoryIcon,
+            user_id: parseInt(this.userId),
+          };
+          await categoryStore.createCategory(categoryData)
+          await this.getUserCategories()
         } catch (error) {
           console.error(error)
         }
@@ -273,7 +273,6 @@ import { useAuthStore } from '../stores/authStore'
           }
           const userData = await response.json()
           this.userTasks = userData.data.tasks
-          this.userCategories = userData.data.user_categories
         } catch (error) {
           console.error(error)
           return []
@@ -281,8 +280,12 @@ import { useAuthStore } from '../stores/authStore'
       },
     },
     created: async function() {
-      await this.fetchUserData()
+      await this.getCategories()
+      if (this.isAuthenticated) {
+        await this.getUserCategories()
+      }
       if (this.isAuthenticated && this.id) {
+        await this.fetchUserData()
         console.log(this.userTasks)
         console.log(this.userTasks.find((task) => task.id == this.id))
         let foundTask = this.userTasks.find((task) => task.id == this.id)
