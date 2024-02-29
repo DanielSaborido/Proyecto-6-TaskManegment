@@ -42,7 +42,7 @@
 import { useThemeStore } from '../stores/themeStore'
 import { useCategoryStore } from '../stores/categoryStore'
 import { useAuthStore } from '../stores/authStore'
-import { mapState } from 'pinia';
+import { mapState } from 'pinia'
 
 export default {
   computed: {

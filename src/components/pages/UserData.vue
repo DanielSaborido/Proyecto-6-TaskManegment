@@ -1,13 +1,14 @@
 <template>
   <div v-if="userData">
-    <img :src="'http://api-proyecto-6.test/storage/' + userData.data.profile_photo" alt="profile_photo" v-if="userData.data.profile_photo" class="profile">
-    <h2>{{ userData.data.name }}</h2>
-    <p>Email: {{ userData.data.email }}</p>
-    <p>Creation Date: {{ formatDate(userData.data.created_at) }}</p>
-    <p>Update Date: {{ formatDate(userData.data.updated_at) }}</p>
-    <p>Tasks created: {{ userData.data.tasks && userData.data.tasks.length }}</p>
-    <p>Categories created: {{ userData.data.user_categories && userData.data.user_categories.length }}</p>
+    <img :src="'http://api-proyecto-6.test/storage/' + userData.profile_photo" alt="profile_photo" v-if="userData.profile_photo" class="profile">
+    <h2>{{ userData.name }}</h2>
+    <p>Email: {{ userData.email }}</p>
+    <p>Creation Date: {{ formatDate(userData.created_at) }}</p>
+    <p>Update Date: {{ formatDate(userData.updated_at) }}</p>
+    <p>Tasks created: {{ userData.tasks && userData.tasks.length }}</p>
+    <p>Categories created: {{ userData.user_categories && userData.user_categories.length }}</p>
     <button @click="showEditForm">Edit user data</button>
+    <button @click="deleteUserData">Delete Account</button>
   </div>
   <div v-if="showUserForm" class="overlay" @click="hideEditForm"></div>
   <form v-if="showUserForm" class="fastForm" @submit.prevent="updateUserData">
@@ -26,10 +27,13 @@
 </template>
 
 <script>
+import { useUserStore } from '../stores/userStore'
+import { useAuthStore } from '../stores/authStore'
+import { mapState } from 'pinia'
+
 export default {
   data() {
-    return{
-      userData: null,
+    return {
       showUserForm: false,
       name: null,
       email: null,
@@ -38,7 +42,15 @@ export default {
       profile_photo: null,
     }
   },
+  computed: {
+    ...mapState(useAuthStore, ['userId', 'isAuthenticated']),
+    ...mapState(useUserStore, ['userData']),
+  },
   methods: {
+    async getUserData() {
+      const userStore = useUserStore()
+      await userStore.getUserData(this.userId)
+    },
     hideEditForm() {
       this.showUserForm = false
     },
@@ -46,6 +58,7 @@ export default {
       this.showUserForm = true
     },
     async updateUserData() {
+      const userStore = useUserStore()
       try {
         const requestBody = {
           name: this.name,
@@ -54,19 +67,10 @@ export default {
           password: this.password,
           profile_photo: this.profile_photo,
         }
-        const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userData.data.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        })
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
+        await userStore.updateUserData(this.userId, requestBody)
+        await this.getUserData()
 
-        await this.getUserData(this.userData.data.id)
         this.name = null
         this.email = null
         this.current_password = null
@@ -85,9 +89,21 @@ export default {
         console.log(this.profile_photo)
       }
     },
-    async getUserData(id){
-      const response = await fetch(`http://api-proyecto-6.test/api/users/${id}`)
-      this.userData = await response.json()
+    async deleteUserData() {
+      if (confirm("Are you sure you want to delete your account?")) {
+        const userStore = useUserStore()
+        try {
+          await userStore.deleteUserData(this.userData.id)
+          this.logout()
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    },
+    logout() {
+      const userLog = useAuthStore()
+      userLog.logout()
+      this.$router.push('/')
     },
     formatDate(dateString) {
       const date = new Date(dateString)
@@ -97,10 +113,9 @@ export default {
       return `${day}/${month}/${year}`
     },
   },
-  mounted: async function() {
-    const userLogued = localStorage.getItem('userId') || null
-    if (userLogued) {
-      await this.getUserData(userLogued)
+  mounted: async function () {
+    if (this.isAuthenticated) {
+      await this.getUserData()
     }
   },
 }

@@ -83,6 +83,7 @@
 
 <script>
 import { useAuthStore } from '../stores/authStore'
+import { useUserStore } from '../stores/userStore'
   export default {  
     data() {
         return{
@@ -141,32 +142,23 @@ import { useAuthStore } from '../stores/authStore'
         }
       },
       async createAccount() {
-        if (this.validateName && this.validateEmail && this.validatePassword) {
-          try {
-            const response = await fetch('http://api-proyecto-6.test/api/users', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                name: this.name,
-                email: this.email,
-                password: this.password,
-              }),
-            })
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`)
-            }
-            const data = await response.json()
-            console.log(data)
-            this.searchUser()
-          } catch (error) {
-            console.error(error)
+      if (this.validateName && this.validateEmail && this.validatePassword) {
+        try {
+          const userData = {
+            name: this.name,
+            email: this.email,
+            password: this.password,
           }
-        } else {
-          this.showErrorMessage = true
+          const data = await useUserStore().createUser(userData)
+          console.log(data)
+          this.searchUser()
+        } catch (error) {
+          console.error(error)
         }
-      },
+      } else {
+        this.showErrorMessage = true
+      }
+    },
       rememberPassword() {
         if (this.validateEmail) {
           console.log("Password recovery email sent successfully!")
