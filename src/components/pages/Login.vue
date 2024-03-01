@@ -99,7 +99,7 @@ import { useUserStore } from '../stores/userStore'
     },
     methods: {
       async searchUser(){
-        const users = await fetch(`http://api-proyecto-6.test/api/users`).then((result) => result.json())
+        const users = await fetch(`http://localhost:8080/api/users`).then((result) => result.json())
         console.log(users)
         let user = users.find(user => user.email === this.email)
         if (user) {

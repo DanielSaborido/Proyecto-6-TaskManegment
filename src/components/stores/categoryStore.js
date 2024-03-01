@@ -12,12 +12,12 @@ export const useCategoryStore = defineStore('category', {
     },
     async getUserCategories(userId) {
       try {
-        const response = await fetch(`http://localhost:8080/api/user-categories?user_id=${userId}`)
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data = await response.json()
-        this.userCategories = data
+        this.userCategories = data.user_categories
       } catch (error) {
         console.error(error)
       }
