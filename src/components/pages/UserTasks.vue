@@ -31,11 +31,11 @@
         <span v-else>{{ getCategory(task.user_category_id, true).name }}</span>
       </p>
       <p>Status: {{ task.status }}</p>
-      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)">{{ task.priority? "Hight priority":"Low priority" }}</p>
+      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)" title="Change task priority">{{ task.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)">
-        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)">
-        <img class="update" src="../../assets/light/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)">
+        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)" title="Delete task">
+        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)" title="Edit task">
+        <img class="update" src="../../assets/light/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)" title="Update task status">
       </section>
     </article>
     <div v-if="taskSelected" class="overlay" @click="hideTaskDetails"></div>
@@ -56,11 +56,11 @@
       <p v-if="taskSelected.due_date">Due date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
       <p v-else>Due date: Unlimited</p>
       <p v-if="taskSelected.due_date">Time remaing: {{ timeRemaining }}</p>
-      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
+      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)" title="Change task priority">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
       <section class="fastAjust">
-        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click="deleteTask(taskSelected.id)">
-        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)">
-        <img class="update" src="../../assets/light/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)">
+        <img class="delete" src="../../assets/light/delete.png" alt="delete" @click="deleteTask(taskSelected.id)" title="Delete task">
+        <img class="edit" src="../../assets/light/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)" title="Edit task">
+        <img class="update" src="../../assets/light/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)" title="Update task status">
       </section>
     </article>
   </section>
@@ -317,8 +317,10 @@ import { useTaskStore } from '../stores/taskStore'
       await this.getCategories()
       if (this.isAuthenticated) {
         await this.getUserCategories()
+        this.tasks = [...this.usertasks.data]
+      } else {
+        this.tasks = [...this.localTasks]
       }
-      this.tasks = [...this.localTasks, ...this.usertasks.data]
       this.tasks.forEach(task => {
         task.rotationClass = this.getRandomRotationClass()
       })
