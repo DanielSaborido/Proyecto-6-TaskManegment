@@ -100,14 +100,11 @@ import { useUserStore } from '../stores/userStore'
     methods: {
       async searchUser(){
         const users = await fetch(`http://localhost:8080/api/users`).then((result) => result.json())
-        console.log(users)
         let user = users.find(user => user.email === this.email)
         if (user) {
           const userLog = useAuthStore()
           userLog.login(user.id)
           this.$router.push('/tasks')
-        } else {
-          console.log("The email was not found in the database.")
         }
       },
       async loginAcount() {
@@ -130,14 +127,12 @@ import { useUserStore } from '../stores/userStore'
             if (data.message === 'Password correct') {
               this.searchUser()
             } else {
-              console.log("Incorrect email or password.")
               this.showErrorMessage = true
             }
           } catch (error) {
             console.error(error)
           }
         } else {
-          console.log("Login failed. Please check your email and password.")
           this.showErrorMessage = true
         }
       },
@@ -161,7 +156,6 @@ import { useUserStore } from '../stores/userStore'
     },
       rememberPassword() {
         if (this.validateEmail) {
-          console.log("Password recovery email sent successfully!")
           this.forget=false
           this.login=true
         } else {

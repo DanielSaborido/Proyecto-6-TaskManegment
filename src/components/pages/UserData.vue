@@ -86,7 +86,6 @@ export default {
       file.readAsDataURL(event.target.files[0])
       file.onload = () => {
         this.profile_photo = file.result
-        console.log(this.profile_photo)
       }
     },
     async deleteUserData() {

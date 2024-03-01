@@ -9,15 +9,12 @@ export const useTaskStore = defineStore('task',{
     async getTasks(loged, userId) {
       if (loged){
         try {
-          console.log(userId)
           const response = await fetch(`http://localhost:8080/api/users/${userId}`)
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
           }
           const data = await response.json()
-          console.log(data)
           this.usertasks = data.data.tasks
-          console.log(this.usertasks)
         } catch (error) {
           console.error(error)
         }

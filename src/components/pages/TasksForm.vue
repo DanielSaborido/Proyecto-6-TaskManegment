@@ -145,7 +145,6 @@ import { useTaskStore } from '../stores/taskStore'
         file.readAsDataURL(event.target.files[0])
         file.onload = () => {
           this.newCategoryIcon = file.result
-          console.log(this.newCategoryIcon)
         }
       },
       async createNewCategory() {
