@@ -1,6 +1,6 @@
 <template>
   <div v-if="userData">
-    <img :src="'http://api-proyecto-6.test/storage/' + userData.profile_photo" alt="profile_photo" v-if="userData.profile_photo" class="profile">
+    <img :src="'http://localhost:8080/storage/' + userData.profile_photo" alt="profile_photo" v-if="userData.profile_photo" class="profile">
     <h2>{{ userData.name }}</h2>
     <p>Email: {{ userData.email }}</p>
     <p>Creation Date: {{ formatDate(userData.created_at) }}</p>

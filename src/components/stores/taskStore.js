@@ -9,7 +9,7 @@ export const useTaskStore = defineStore('task',{
     async getTasks(loged, userId) {
       if (loged){
         try {
-          const response = await fetch(`http://api-proyecto-6.test/api/tasks?user_id=${userId}`)
+          const response = await fetch(`http://localhost:8080/api/tasks?user_id=${userId}`)
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
           }
@@ -26,7 +26,7 @@ export const useTaskStore = defineStore('task',{
     async createTask(loged, taskData) {
       if (loged){
         try {
-          const response = await fetch('http://api-proyecto-6.test/api/tasks', {
+          const response = await fetch('http://localhost:8080/api/tasks', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export const useTaskStore = defineStore('task',{
     async deleteTask(loged, taskId) {
       if (loged) {
         try {
-          const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+          const response = await fetch(`http://localhost:8080/api/tasks/${taskId}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export const useTaskStore = defineStore('task',{
     async updateTask(loged, taskId, taskData) {
       if (loged) {
         try {
-          const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
+          const response = await fetch(`http://localhost:8080/api/tasks/${taskId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

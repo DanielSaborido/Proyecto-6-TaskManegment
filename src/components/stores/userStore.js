@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async getUserData(userId) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/users/${userId}`)
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', {
     },
     async createUser(userData) {
       try {
-        const response = await fetch('http://api-proyecto-6.test/api/users', {
+        const response = await fetch('http://localhost:8080/api/users', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', {
     },
     async updateUserData(userId, updatedData) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', {
     },
     async deleteUserData(userId) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
           method: 'DELETE',
         })
 

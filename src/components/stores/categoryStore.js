@@ -7,12 +7,12 @@ export const useCategoryStore = defineStore('category', {
   }),
   actions: {
     async getCategories(){
-      const response = await fetch(`http://api-proyecto-6.test/api/categories`)
+      const response = await fetch(`http://localhost:8080/api/categories`)
       this.categories = await response.json()
     },
     async getUserCategories(userId) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/user-categories?user_id=${userId}`)
+        const response = await fetch(`http://localhost:8080/api/user-categories?user_id=${userId}`)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -24,7 +24,7 @@ export const useCategoryStore = defineStore('category', {
     },
     async createCategory(categoryData) {
       try {
-        const response = await fetch('http://api-proyecto-6.test/api/user-categories', {
+        const response = await fetch('http://localhost:8080/api/user-categories', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const useCategoryStore = defineStore('category', {
     },
     async deleteCategory(categoryId) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${categoryId}`, {
+        const response = await fetch(`http://localhost:8080/api/user-categories/${categoryId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const useCategoryStore = defineStore('category', {
     },
     async updateCategory(categoryId, categoryData) {
       try {
-        const response = await fetch(`http://api-proyecto-6.test/api/user-categories/${categoryId}`, {
+        const response = await fetch(`http://localhost:8080/api/user-categories/${categoryId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

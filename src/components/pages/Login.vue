@@ -113,7 +113,7 @@ import { useUserStore } from '../stores/userStore'
       async loginAcount() {
         if (this.validateEmail && this.password) {
           try {
-            const response = await fetch('http://api-proyecto-6.test/api/check-password', {
+            const response = await fetch('http://localhost:8080/api/check-password', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
