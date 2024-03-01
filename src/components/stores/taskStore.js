@@ -16,7 +16,7 @@ export const useTaskStore = defineStore('task',{
           }
           const data = await response.json()
           console.log(data)
-          this.usertasks = data.tasks
+          this.usertasks = data.data.tasks
           console.log(this.usertasks)
         } catch (error) {
           console.error(error)

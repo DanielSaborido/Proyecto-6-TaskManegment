@@ -154,7 +154,8 @@ El dessarrollo de mi aplicacion fue:
 
 ## 9. Pruebas
 
-Descripción de las pruebas realizadas, enfoque de pruebas unitarias y, si es posible, automatización de pruebas.
+Manejo de la aplicacion
+[Pruebas](https://drive.google.com/file/d/1s4m-l4GrmuoimgvHrRyZ2lM7sbwnuNU4/view?usp=sharing)
 
 ## 10. Despliegue
 

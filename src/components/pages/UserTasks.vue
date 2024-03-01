@@ -317,7 +317,7 @@ import { useTaskStore } from '../stores/taskStore'
       await this.getCategories()
       if (this.isAuthenticated) {
         await this.getUserCategories()
-        this.tasks = [...this.usertasks.data]
+        this.tasks = [...this.usertasks]
       } else {
         this.tasks = [...this.localTasks]
       }

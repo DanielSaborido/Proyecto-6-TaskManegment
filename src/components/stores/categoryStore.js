@@ -17,7 +17,7 @@ export const useCategoryStore = defineStore('category', {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data = await response.json()
-        this.userCategories = data.user_categories
+        this.userCategories = data.data.user_categories
       } catch (error) {
         console.error(error)
       }

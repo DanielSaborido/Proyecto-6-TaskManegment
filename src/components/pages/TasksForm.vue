@@ -248,7 +248,7 @@ import { useTaskStore } from '../stores/taskStore'
         await this.getUserCategories()
       }
       if (this.id) {
-        const tasks = this.isAuthenticated ? this.usertasks.data : this.localtaks
+        const tasks = this.isAuthenticated ? this.usertasks : this.localtaks
         let foundTask = tasks.find((task) => task.id == this.id)
         if (foundTask) {
             this.title = foundTask.title
