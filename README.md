@@ -33,4 +33,6 @@ https://laragon.org/download/index.html
 
 * Video guia drive
 
-https://drive.google.com/file/d/1Fhg9_VgOYbRVD1ikY8ufaqNMdv4jE0_O/view?usp=sharing
+https://drive.google.com/file/d/1Fhg9_VgOYbRVD1ikY8ufaqNMdv4jE0_O/view?usp=sharing (utilizando laragon)
+
+https://drive.google.com/file/d/1s4m-l4GrmuoimgvHrRyZ2lM7sbwnuNU4/view?usp=sharing (utilizando despliegue en docker)
