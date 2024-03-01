@@ -192,6 +192,7 @@ import { useTaskStore } from '../stores/taskStore'
             } 
             taskStore.createTask(this.isAuthenticated, requestBody)
           }
+          await taskStore.getTasks(this.isAuthenticated, this.userId)
           this.$router.push('/tasks')
         } else {
           this.showErrorMessage = true
@@ -225,6 +226,7 @@ import { useTaskStore } from '../stores/taskStore'
             }
             taskStore.updateTask(this.isAuthenticated, this.id, requestBody) 
           }
+          await taskStore.getTasks(this.isAuthenticated, this.userId)
           this.$router.push('/tasks')
         } else {
           this.showErrorMessage = true
