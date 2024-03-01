@@ -138,11 +138,7 @@ Pasos detallados sobre cómo instalar y preparar el proyecto:
 
 ## 7. Diseño
 
-Descripción del diseño con diagramas UML:
-
-- Diagrama de entidad-relación.
-- Diagramas de casos de uso.
-- Diagramas de flujo.
+![Diagrame entidad relacion](fast_tasks_ER.png)
 
 ## 8. Desarrollo
 
@@ -166,7 +162,33 @@ Despliegue realizado localmente.
 
 ## 11. Manual
 
-Manual de uso de la aplicación. Explicar cómo realizar acciones específicas dentro de la aplicación.
+### Home
+![Home](/capturas_programa/home.jpeg)
+El home es la primera pagina que se te muestra si entras por primera vez, si ya estabas registrado vas directamente a tasks, y en esta pagina se te da una introduccion a la aplicacion y te da la opcion de iniciar la aplicacion con una version de prueba.
+
+### Login
+![Login](/capturas_programa/login.jpeg)
+Es un login como todos los demas donde inicias sesion o en sus defectos darle a recordar contraseña o crear un nuevo usuario.
+
+### Tasks
+![Tasks](/capturas_programa/tasks.jpg)
+Aqui es donde se muestran todas las tareas que ha creado el usuario, permitiendote filtrarlas u ordenarlas por ciertos criterios y ya cada tarea tiene su propia configuracion como eliminarla, editarla, modificar el estado de la tareo o cambiar su prioridad.
+
+### Tasks Form
+![Tasks Form](/capturas_programa/taskF.jpeg)
+Con este formulario podemos crear nuevas tareas o editar la tarea que hubieramos seleccionado, pero tambien tiene la peculiaridad para aquillos que esten registrados en la aplicacion de crear categorias personalizadas.
+
+### User Data
+![User Data](/capturas_programa/user.jpeg)
+Muestra la informacion del usraurio y tambien da opcion de editar esa informacion o de eliminar su cuenta.
+
+### User Categories
+![User Categories](/capturas_programa/customC.jpeg)
+En esta tabla se recopilan todas las categorias que haya creado el usuario con opciones de editar o eliminar una categoria en especifico o de crer nuevas categorias.
+
+### Contact
+![Contact](/capturas_programa/contact.jpeg)
+La clasica pagina de contactos donde informas de cualquir complicacion al dueño de la aplicacion
 
 ## 12. Conclusiones
 
