@@ -245,17 +245,17 @@ import { useTaskStore } from '../stores/taskStore'
       if (this.isAuthenticated) {
         await this.getUserCategories()
       }
-      if (this.isAuthenticated && this.id) {
-        const tasks = this.usertasks.data
-        let foundTask = tasks.find((task) => task.id == this.id);
+      if (this.id) {
+        const tasks = this.isAuthenticated ? this.usertasks.data : this.localtaks
+        let foundTask = tasks.find((task) => task.id == this.id)
         if (foundTask) {
-            this.title = foundTask.title;
-            this.description = foundTask.description;
-            this.categorieSelected = foundTask.category_id;
-            this.customcategorieSelected = foundTask.user_category_id;
-            this.status = foundTask.status;
-            this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0];
-            this.priority = foundTask.priority === 1;
+            this.title = foundTask.title
+            this.description = foundTask.description
+            this.categorieSelected = foundTask.category_id
+            this.isAuthenticated & (this.customcategorieSelected = foundTask.user_category_id)
+            this.status = foundTask.status
+            this.limitDate = new Date(foundTask.due_date).toISOString().split('T')[0]
+            this.priority = foundTask.priority === 1
         } else {
             this.$router.push('/:pathMach(.*)*');
         }

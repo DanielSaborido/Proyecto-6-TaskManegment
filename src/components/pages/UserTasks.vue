@@ -78,10 +78,12 @@
 import { mapState } from 'pinia'
 import { useAuthStore } from '../stores/authStore'
 import { useCategoryStore } from '../stores/categoryStore'
+import { useTaskStore } from '../stores/taskStore'
   export default {
     computed: {
       ...mapState(useAuthStore, ['userId', 'isAuthenticated']),
       ...mapState(useCategoryStore, ['categories', 'userCategories']),
+      ...mapState(useTaskStore, ['localtaks', 'usertasks']),
     },
     data() {
       return{
@@ -209,18 +211,11 @@ import { useCategoryStore } from '../stores/categoryStore'
             const task = this.filteredTasks.find(task => task.id === id)
             const taskId = task.id
             const newPriority = !task.priority
-            const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                priority: newPriority,
-              }),
-            })
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`)
+            const priority = {
+              priority: newPriority,
             }
+            const taskStore = useTaskStore()
+            await taskStore.updateTask(this.isAuthenticated, taskId, priority)
             task.priority = newPriority
           } catch (error) {
             console.error(error)
@@ -233,58 +228,35 @@ import { useCategoryStore } from '../stores/categoryStore'
       async deleteTask(index) {
         if (confirm("Are you sure you want to delete this task?")) {
           if (this.isAuthenticated){
-            try {
-              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${index}`, {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-              }
-              const data = await response.json()
-              console.log(data)
-              this.tasks = this.tasks.filter(task => task.id !== index)
-            } catch (error) {
-              console.error(error)
-            }
+            const taskStore = useTaskStore()
+            await taskStore.deleteTask(this.isAuthenticated, index)
+            this.tasks = this.tasks.filter(task => task.id !== index)
           } else {
             this.tasks.splice(index, 1)
-            localStorage.setItem("tasks", JSON.stringify(this.tasks))
+            const taskStore = useTaskStore()
+            await taskStore.deleteTask(this.isAuthenticated, index)
           }
           this.hideTaskDetails()
         }
       },
       async updateTaskStatus(index) {
         if (this.isAuthenticated) {
-          try {
-            const task = this.filteredTasks.find(task => task.id === index)
-            const taskId = task.id
-            let newStatus = task.status
-            if (newStatus === "pending") {
-                newStatus = "processing"
-            } else if (newStatus === "processing") {
-                newStatus = "complete"
-            } else if (newStatus === "complete") {
-                newStatus = "processing"
-            }
-            const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                status: newStatus,
-              }),
-            })
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`)
-            }
-            task.status = newStatus
-          } catch (error) {
-            console.error(error)
+          const task = this.filteredTasks.find(task => task.id === index)
+          const taskId = task.id
+          let newStatus = task.status
+          if (newStatus === "pending") {
+              newStatus = "processing"
+          } else if (newStatus === "processing") {
+              newStatus = "complete"
+          } else if (newStatus === "complete") {
+              newStatus = "processing"
           }
+          const status = {
+            status: newStatus,
+          }
+          const taskStore = useTaskStore()
+          await taskStore.updateTask(this.isAuthenticated, taskId, status)
+          task.status = newStatus
         } else {
           const task = this.filteredTasks[index]
           if (task.status === "pending") {
@@ -302,28 +274,15 @@ import { useCategoryStore } from '../stores/categoryStore'
       },
       async completeAllTasks() {
         if (this.isAuthenticated) {
-          try {
-            for (let task of this.filteredTasks) {
-              const taskId = task.id
-              let newStatus = task.status
-              newStatus = "complete"
-              const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  status: newStatus,
-                }),
-              })
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-              }
-              task.status = newStatus
+          for (let task of this.filteredTasks) {
+            const taskId = task.id
+            const status = {
+              status: "complete",
             }
-          } catch (error) {
-            console.error(error)
-          }  
+            const taskStore = useTaskStore()
+            await taskStore.updateTask(this.isAuthenticated, taskId, status)
+            task.status = "complete"
+          }
         } else {
           this.filteredTasks.forEach(task => {
             task.status = 'complete'
@@ -333,61 +292,33 @@ import { useCategoryStore } from '../stores/categoryStore'
       },
       async deleteCompletedTasks() {
         if (this.isAuthenticated) {
-          try {
-            for (let task of this.filteredTasks) {
-              let taskStatus = task.status
-              if (taskStatus == 'complete'){
-                const taskId = task.id
-                const response = await fetch(`http://api-proyecto-6.test/api/tasks/${taskId}`, {
-                  method: 'DELETE',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                })
-                if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`)
-                }
-                const data = await response.json()
-                console.log(data)
-                this.tasks = this.tasks.filter(task => task.id !== taskId)
-              }
-              
+          for (let task of this.filteredTasks) {
+            let taskStatus = task.status
+            if (taskStatus == 'complete'){
+              const taskId = task.id
+              const taskStore = useTaskStore()
+              await taskStore.deleteTask(this.isAuthenticated, taskId)
+              this.tasks = this.tasks.filter(task => task.id !== taskId)
             }
-          } catch (error) {
-            console.error(error)
-          }  
+          }
         } else {
           this.filteredTasks = this.filteredTasks.filter(task => task.status !== 'complete')
           this.tasks = this.tasks.filter(task => task.status !== 'complete')
           localStorage.setItem('tasks', JSON.stringify(this.tasks))
         }
       },
-      async fetchDataFromAPI() {
-        try {
-          const response = await fetch(`http://api-proyecto-6.test/api/users/${this.userId}`)
-          const userData = await response.json()
-          if (userData && userData.data) {
-            const apiTasks = userData.data.tasks || [];
-            return apiTasks;
-          } else {
-            console.error("UserData or userData.data is undefined.");
-            return [];
-          }
-        } catch (error) {
-          console.error(error);
-          return [];
-        }
+      async getTasks(loged, userId) {
+        const taskStore = useTaskStore()
+        taskStore.getTasks(loged, userId)
       },
     },
     created: async function() {
+      await this.getTasks(this.isAuthenticated, this.userId)
       await this.getCategories()
-      let localTasks = JSON.parse(localStorage.getItem('tasks')) || []
-      let apiTasks = []
       if (this.isAuthenticated) {
         await this.getUserCategories()
-        apiTasks = await this.fetchDataFromAPI()
       }
-      this.tasks = [...localTasks, ...apiTasks]
+      this.tasks = [...this.localTasks, ...this.usertasks.data]
       this.tasks.forEach(task => {
         task.rotationClass = this.getRandomRotationClass()
       })
