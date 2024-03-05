@@ -10,7 +10,7 @@ const routes = [
     meta: { title: 'Fast Task' },
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore()
-      if (authStore.isAuthenticated || authStore.isBeta) {
+      if (authStore.isAuthenticated && authStore.isBeta) {
         next('/tasks')
       } else {
         next()
@@ -23,7 +23,7 @@ const routes = [
     meta: { title: 'Fast Task' },
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore()
-      if (!authStore.isAuthenticated || !authStore.isBeta) {
+      if (!authStore.isAuthenticated && !authStore.isBeta) {
         next('/')
       } else {
         next()
