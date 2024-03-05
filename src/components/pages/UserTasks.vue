@@ -19,49 +19,57 @@
     </select>
   </section>
   <section v-if="filteredTasks.length > 0" class="tasks">
-    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true, zoom: true }" @click="showTaskDetails(task)">
-      <h3>{{ task.title }}</h3>
-      <p>{{ truncateDescription(task.description) }}</p>
-      <p v-if="task.category_id">Category: 
-        <img v-if="getCategory(task.category_id, false).category_photo" :src="getCategory(task.category_id, false).category_photo" :alt="getCategory(task.category_id, false).name" class="category-icon">
-        <span v-else>{{ getCategory(task.category_id, false).name }}</span>
-      </p>
-      <p v-if="task.user_category_id">Category: 
-        <img v-if="getCategory(task.user_category_id, true).category_photo" :src="getCategory(task.user_category_id, true).category_photo" :alt="getCategory(task.user_category_id, true).name" class="category-icon">
-        <span v-else>{{ getCategory(task.user_category_id, true).name }}</span>
-      </p>
-      <p>Status: {{ task.status }}</p>
-      <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)" title="Change task priority">{{ task.priority? "Hight priority":"Low priority" }}</p>
-      <section class="fastAjust">
+    <article v-for="(task, index) in filteredTasks" :key="index" :class="{ task: true, [task.rotationClass]: true, zoom: true, crumpled:[task.status === 'complete']}" @click="showTaskDetails(task)">
+      <header>
+        <h3>{{ task.title }}</h3>
+      </header>
+      <main>
+        <p>{{ truncateDescription(task.description) }}</p>
+        <p v-if="task.category_id">Category: 
+          <img v-if="getCategory(task.category_id, false).category_photo" :src="getCategory(task.category_id, false).category_photo" :alt="getCategory(task.category_id, false).name" class="category-icon">
+          <span v-else>{{ getCategory(task.category_id, false).name }}</span>
+        </p>
+        <p v-if="task.user_category_id">Category: 
+          <img v-if="getCategory(task.user_category_id, true).category_photo" :src="getCategory(task.user_category_id, true).category_photo" :alt="getCategory(task.user_category_id, true).name" class="category-icon">
+          <span v-else>{{ getCategory(task.user_category_id, true).name }}</span>
+        </p>
+        <p>Status: {{ task.status }}</p>
+        <p :class="{ priority:true, hight:task.priority , low:!task.priority }" @click.stop="changePriority(task.id? task.id : index)" title="Change task priority">{{ task.priority? "Hight priority":"Low priority" }}</p>
+      </main>
+      <footer class="fastAjust">
         <img class="delete" src="../../assets/light/delete.png" alt="delete" @click.stop="deleteTask(task.id? task.id : index)" title="Delete task">
         <img class="edit" src="../../assets/light/libro.png" alt="edit" @click.stop="goToEditPage(task.id? task.id : index)" title="Edit task">
         <img class="update" src="../../assets/light/update.png" alt="update" @click.stop="updateTaskStatus(task.id? task.id : index)" title="Update task status">
-      </section>
+      </footer>
     </article>
     <div v-if="taskSelected" class="overlay" @click="hideTaskDetails"></div>
-    <article v-if="taskSelected" class="task task-details-container">
-      <h3>{{ taskSelected.title }}</h3>
-      <p>{{ taskSelected.description }}</p>
-      <p v-if="taskSelected.category_id">Category: 
-        <img v-if="getCategory(taskSelected.category_id, false).category_photo" :src="getCategory(taskSelected.category_id, false).category_photo" :alt="getCategory(taskSelected.category_id, false).name" class="category-icon">
-        <span v-else>{{ getCategory(taskSelected.category_id, false).name }}</span>
-      </p>
-      <p v-if="taskSelected.user_category_id">Category: 
-        <img v-if="getCategory(taskSelected.user_category_id, true).category_photo" :src="getCategory(taskSelected.user_category_id, true).category_photo" :alt="getCategory(taskSelected.user_category_id, true).name" class="category-icon">
-        <span v-else>{{ getCategory(taskSelected.user_category_id, true).name }}</span>
-      </p>
-      <p>Status: {{ taskSelected.status }}</p>
-      <p>Creation date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
-      <p>Update date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
-      <p v-if="taskSelected.due_date">Due date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
-      <p v-else>Due date: Unlimited</p>
-      <p v-if="taskSelected.due_date">Time remaing: {{ timeRemaining }}</p>
-      <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)" title="Change task priority">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
-      <section class="fastAjust">
+    <article v-if="taskSelected" :class="{task: true, [task-details-container]: true, crumpled:[task.status === 'complete']}">
+      <header>
+        <h3>{{ taskSelected.title }}</h3>
+      </header>
+      <main>
+        <p>{{ taskSelected.description }}</p>
+        <p v-if="taskSelected.category_id">Category: 
+          <img v-if="getCategory(taskSelected.category_id, false).category_photo" :src="getCategory(taskSelected.category_id, false).category_photo" :alt="getCategory(taskSelected.category_id, false).name" class="category-icon">
+          <span v-else>{{ getCategory(taskSelected.category_id, false).name }}</span>
+        </p>
+        <p v-if="taskSelected.user_category_id">Category: 
+          <img v-if="getCategory(taskSelected.user_category_id, true).category_photo" :src="getCategory(taskSelected.user_category_id, true).category_photo" :alt="getCategory(taskSelected.user_category_id, true).name" class="category-icon">
+          <span v-else>{{ getCategory(taskSelected.user_category_id, true).name }}</span>
+        </p>
+        <p>Status: {{ taskSelected.status }}</p>
+        <p>Creation date: {{ taskSelected.creation_date.replace(' ', ' - ') }}</p>
+        <p>Update date: {{ taskSelected.update_date.replace(' ', ' - ') }}</p>
+        <p v-if="taskSelected.due_date">Due date: {{ new Date(taskSelected.due_date).toISOString().replace('T', ' - ').substring(0, 21) }}</p>
+        <p v-else>Due date: Unlimited</p>
+        <p v-if="taskSelected.due_date">Time remaing: {{ timeRemaining }}</p>
+        <p :class="{ priority:true, hight:taskSelected.priority , low:!taskSelected.priority }" @click="changePriority(taskSelected.id)" title="Change task priority">{{ taskSelected.priority? "Hight priority":"Low priority" }}</p>
+      </main>
+      <footer class="fastAjust">
         <img class="delete" src="../../assets/light/delete.png" alt="delete" @click="deleteTask(taskSelected.id)" title="Delete task">
         <img class="edit" src="../../assets/light/libro.png" alt="edit" @click="goToEditPage(taskSelected.id)" title="Edit task">
         <img class="update" src="../../assets/light/update.png" alt="update" @click="updateTaskStatus(taskSelected.id)" title="Update task status">
-      </section>
+      </footer>
     </article>
   </section>
   <section v-else>

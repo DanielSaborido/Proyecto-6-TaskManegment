@@ -137,3 +137,11 @@
   width: 100%;
   justify-content: space-around;
 }
+
+.crumpled {
+  background: linear-gradient(135deg, #f3f04e 5%, transparent 5%) -50px 0,
+    linear-gradient(225deg, #f3f04e 5%, transparent 5%) -50px 0,
+    linear-gradient(315deg, #f3f04e 5%, transparent 5%),
+    linear-gradient(45deg, #f3f04e 5%, transparent 5%);
+  background-color: rgba(243, 240, 78, 0.822);
+}
