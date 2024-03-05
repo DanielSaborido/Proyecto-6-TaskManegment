@@ -4,6 +4,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     userId: localStorage.getItem('userId') || null,
     isAuthenticated: !!localStorage.getItem('userId'),
+    isBeta: localStorage.getItem('trialStarted'),
   }),
   actions: {
     login(userId) {
