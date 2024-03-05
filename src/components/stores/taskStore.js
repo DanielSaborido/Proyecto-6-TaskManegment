@@ -19,8 +19,8 @@ export const useTaskStore = defineStore('task',{
           console.error(error)
         }
       } else {
-        const localTasks = localStorage.getItem('tasks')
-        this.localtaks = localTasks ? JSON.parse(localTasks) : []
+        const tasks = localStorage.getItem('tasks')
+        this.localtaks = tasks ? JSON.parse(tasks) : []
       }
     },
     async createTask(loged, taskData) {

@@ -319,7 +319,7 @@ import { useTaskStore } from '../stores/taskStore'
         await this.getUserCategories()
         this.tasks = [...this.usertasks]
       } else {
-        this.tasks = [...this.localTasks]
+        this.tasks = [...this.localtaks]
       }
       this.tasks.forEach(task => {
         task.rotationClass = this.getRandomRotationClass()
